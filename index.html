@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZenGrid Hitori - Developed by Bikram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #e3e3e3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Title Screen */
+        .title-screen h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .developer-credit {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        /* Menu */
+        .menu {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .menu-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .menu-btn:hover::before {
+            left: 100%;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Game Screen */
+        .game-screen {
+            display: none;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .timer, .hints-left {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+            background: #ddd;
+            padding: 2px;
+            border-radius: 10px;
+            margin: 1rem auto;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            position: relative;
+        }
+
+        .cell:hover {
+            background: #f0f0f0;
+        }
+
+        .cell.shaded {
+            background: #333;
+            color: white;
+        }
+
+        .cell.highlighted {
+            background: #fffacd;
+            animation: pulse 1s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .cell.invalid {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        /* How to Play Screen */
+        .how-to-play {
+            display: none;
+            text-align: left;
+        }
+
+        .how-to-play h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .rule {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+        }
+
+        /* Statistics Screen */
+        .statistics {
+            display: none;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #555;
+        }
+
+        /* Victory Screen */
+        .victory-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .victory-screen h2 {
+            color: #4caf50;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            animation: bounce 1s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .time-display {
+            font-size: 1.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .paused-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            border-radius: 20px;
+            z-index: 10;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 1rem; }
+            .title-screen h1 { font-size: 2rem; }
+            .grid { max-width: 300px; }
+            .cell { font-size: 1rem; }
+            .game-header { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="paused-overlay">
+            <div>GAME PAUSED</div>
+        </div>
+        
+        <div class="content">
+            <!-- Loading Screen -->
+            <div class="loading-screen" id="loadingScreen">
+                <div class="loader"></div>
+                <h2>Loading ZenGrid Hitori...</h2>
+                <p>Preparing your zen puzzle experience</p>
+            </div>
+
+            <!-- Title Screen -->
+            <div class="title-screen" id="titleScreen" style="display: none;">
+                <h1>ZenGrid Hitori</h1>
+                <div class="developer-credit">Developed by Bikram</div>
+                <button class="menu-btn" onclick="showMenu()">Enter Game</button>
+            </div>
+
+            <!-- Main Menu -->
+            <div class="menu" id="mainMenu">
+                <h2 style="color: #667eea; margin-bottom: 1rem;">Main Menu</h2>
+                <button class="menu-btn" onclick="startGame()">🎯 Start Game</button>
+                <button class="menu-btn" onclick="showHowToPlay()">📚 How to Play</button>
+                <button class="menu-btn" onclick="showStatistics()">📊 Statistics</button>
+            </div>
+
+            <!-- Game Screen -->
+            <div class="game-screen" id="gameScreen">
+                <div class="game-header">
+                    <div class="game-info">
+                        <div class="timer" id="timer">00:00</div>
+                        <div class="hints-left" id="hintsLeft">Hints: 3</div>
+                    </div>
+                    <div class="game-controls">
+                        <button class="control-btn" onclick="togglePause()" id="pauseBtn">⏸️ Pause</button>
+                        <button class="control-btn" onclick="getHint()">💡 Hint</button>
+                        <button class="control-btn" onclick="restartGame()">🔄 Restart</button>
+                        <button class="control-btn" onclick="showMenu()">🏠 Menu</button>
+                    </div>
+                </div>
+                <div class="grid" id="gameGrid"></div>
+            </div>
+
+            <!-- How to Play Screen -->
+            <div class="how-to-play" id="howToPlayScreen">
+                <h2>How to Play Hitori</h2>
+                <div class="rule">
+                    <h3>🎯 Objective</h3>
+                    <p>Shade some cells so that no number appears more than once in any row or column.</p>
+                </div>
+                <div class="rule">
+                    <h3>📋 Rules</h3>
+                    <p><strong>1.</strong> Click cells to shade them black</p>
+                    <p><strong>2.</strong> No two shaded cells can be adjacent (horizontally or vertically)</p>
+                    <p><strong>3.</strong> All unshaded cells must remain connected</p>
+                    <p><strong>4.</strong> Each row and column can have each number only once (in unshaded cells)</p>
+                </div>
+                <div class="rule">
+                    <h3>💡 Tips</h3>
+                    <p>• Start with numbers that appear most frequently</p>
+                    <p>• Use the hint system when stuck (3 hints per game)</p>
+                    <p>• Think ahead - shading cells affects connectivity</p>
+                </div>
+                <button class="back-btn" onclick="showMenu()">Back to Menu</button>
+            </div>
+
+            <!-- Statistics Screen -->
+            <div class="statistics" id="statisticsScreen">
+                <h2 style="color: #667eea; margin-bottom: 1rem;">Statistics</h2>
+                <div class="stat-item">
+                    <span>Best Time</span>
+                    <span id="bestTime">--:--</span>
+                </div>
+                <div class="stat-item">
+                    <span>Games Completed</span>
+                    <span id="gamesCompleted">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Average Time</span>
+                    <span id="averageTime">--:--</span>
+                </div>
+                <button class="back-btn" onclick="showMenu()">Back to Menu</button>
+            </div>
+
+            <!-- Victory Screen -->
+            <div class="victory-screen" id="victoryScreen">
+                <h2>🎉 Congratulations!</h2>
+                <div class="time-display" id="completionTime">Time: 00:00</div>
+                <p id="bestTimeMessage"></p>
+                <div style="margin-top: 2rem;">
+                    <button class="menu-btn" onclick="nextGame()" style="margin: 0.5rem;">▶️ Next Game</button>
+                    <button class="menu-btn" onclick="showMenu()" style="margin: 0.5rem;">🏠 Main Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class HitoriGame {
+            constructor() {
+                this.grid = [];
+                this.solution = [];
+                this.currentGrid = [];
+                this.gridSize = 8;
+                this.startTime = null;
+                this.elapsedTime = 0;
+                this.timerInterval = null;
+                this.isPaused = false;
+                this.hintsUsed = 0;
+                this.maxHints = 3;
+                
+                this.loadStatistics();
+                this.initializeGame();
+            }
+
+            initializeGame() {
+                // Show loading screen for 2 seconds
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                    document.getElementById('titleScreen').style.display = 'block';
+                }, 2000);
+            }
+
+            generatePuzzle() {
+                // Generate a valid completed grid first
+                this.generateValidGrid();
+                
+                // Create puzzle by duplicating some numbers
+                this.createPuzzleFromGrid();
+                
+                // Calculate solution
+                this.calculateSolution();
+                
+                this.renderGrid();
+            }
+
+            generateValidGrid() {
+                this.grid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(0));
+                
+                // Fill grid with numbers 1-8, ensuring no immediate conflicts
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        let num = (row + col) % this.gridSize + 1;
+                        // Add some randomness
+                        if (Math.random() < 0.3) {
+                            num = Math.floor(Math.random() * this.gridSize) + 1;
+                        }
+                        this.grid[row][col] = num;
+                    }
+                }
+            }
+
+            createPuzzleFromGrid() {
+                // Add strategic duplicates to create puzzle
+                const duplicateCells = [];
+                
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        if (Math.random() < 0.4) { // 40% chance to create duplicate
+                            const originalNum = this.grid[row][col];
+                            
+                            // Find another position in same row or column to duplicate
+                            if (Math.random() < 0.5) {
+                                // Duplicate in same row
+                                const targetCol = Math.floor(Math.random() * this.gridSize);
+                                if (targetCol !== col) {
+                                    this.grid[row][targetCol] = originalNum;
+                                    duplicateCells.push([row, col], [row, targetCol]);
+                                }
+                            } else {
+                                // Duplicate in same column
+                                const targetRow = Math.floor(Math.random() * this.gridSize);
+                                if (targetRow !== row) {
+                                    this.grid[targetRow][col] = originalNum;
+                                    duplicateCells.push([row, col], [targetRow, col]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            calculateSolution() {
+                this.solution = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
+                
+                // Simple solution calculation - shade cells that create duplicates
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        const currentNum = this.grid[row][col];
+                        
+                        // Check for duplicates in row
+                        let rowDuplicates = [];
+                        for (let c = 0; c < this.gridSize; c++) {
+                            if (this.grid[row][c] === currentNum) {
+                                rowDuplicates.push([row, c]);
+                            }
+                        }
+                        
+                        // Check for duplicates in column
+                        let colDuplicates = [];
+                        for (let r = 0; r < this.gridSize; r++) {
+                            if (this.grid[r][col] === currentNum) {
+                                colDuplicates.push([r, col]);
+                            }
+                        }
+                        
+                        // If there are duplicates, shade some of them
+                        if (rowDuplicates.length > 1) {
+                            // Shade every other duplicate in row
+                            for (let i = 1; i < rowDuplicates.length; i += 2) {
+                                const [r, c] = rowDuplicates[i];
+                                this.solution[r][c] = true;
+                            }
+                        }
+                        
+                        if (colDuplicates.length > 1) {
+                            // Shade every other duplicate in column
+                            for (let i = 1; i < colDuplicates.length; i += 2) {
+                                const [r, c] = colDuplicates[i];
+                                this.solution[r][c] = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            renderGrid() {
+                const gridElement = document.getElementById('gameGrid');
+                gridElement.innerHTML = '';
+                
+                this.currentGrid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
+                
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+                        cell.textContent = this.grid[row][col];
+                        cell.onclick = () => this.toggleCell(row, col);
+                        cell.id = `cell-${row}-${col}`;
+                        gridElement.appendChild(cell);
+                    }
+                }
+            }
+
+            toggleCell(row, col) {
+                if (this.isPaused) return;
+                
+                this.currentGrid[row][col] = !this.currentGrid[row][col];
+                const cell = document.getElementById(`cell-${row}-${col}`);
+                
+                if (this.currentGrid[row][col]) {
+                    cell.classList.add('shaded');
+                } else {
+                    cell.classList.remove('shaded');
+                }
+                
+                this.checkVictory();
+            }
+
+            getHint() {
+                if (this.hintsUsed >= this.maxHints || this.isPaused) return;
+                
+                this.hintsUsed++;
+                document.getElementById('hintsLeft').textContent = `Hints: ${this.maxHints - this.hintsUsed}`;
+                
+                // Find a cell that should be shaded but isn't
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        if (this.solution[row][col] && !this.currentGrid[row][col]) {
+                            const cell = document.getElementById(`cell-${row}-${col}`);
+                            cell.classList.add('highlighted');
+                            setTimeout(() => {
+                                cell.classList.remove('highlighted');
+                            }, 2000);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            checkVictory() {
+                // Simple victory check - if current grid matches solution pattern
+                let matches = 0;
+                let total = 0;
+                
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        total++;
+                        if (this.currentGrid[row][col] === this.solution[row][col]) {
+                            matches++;
+                        }
+                    }
+                }
+                
+                // Victory if 90% or more cells match the solution
+                if (matches >= total * 0.9) {
+                    this.handleVictory();
+                }
+            }
+
+            handleVictory() {
+                this.stopTimer();
+                
+                // Update statistics
+                this.updateStatistics();
+                
+                // Show victory screen
+                document.getElementById('gameScreen').style.display = 'none';
+                document.getElementById('victoryScreen').style.display = 'block';
+                document.getElementById('completionTime').textContent = `Time: ${this.formatTime(this.elapsedTime)}`;
+                
+                const bestTime = localStorage.getItem('hitorieBestTime');
+                if (!bestTime || this.elapsedTime < parseInt(bestTime)) {
+                    localStorage.setItem('hitorieBestTime', this.elapsedTime.toString());
+                    document.getElementById('bestTimeMessage').textContent = '🎉 New Best Time!';
+                } else {
+                    document.getElementById('bestTimeMessage').textContent = `Best: ${this.formatTime(parseInt(bestTime))}`;
+                }
+            }
+
+            startTimer() {
+                this.startTime = Date.now() - this.elapsedTime;
+                this.timerInterval = setInterval(() => {
+                    if (!this.isPaused) {
+                        this.elapsedTime = Date.now() - this.startTime;
+                        document.getElementById('timer').textContent = this.formatTime(this.elapsedTime);
+                    }
+                }, 1000);
+            }
+
+            stopTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+            }
+
+            togglePause() {
+                this.isPaused = !this.isPaused;
+                const pauseBtn = document.getElementById('pauseBtn');
+                const overlay = document.querySelector('.paused-overlay');
+                
+                if (this.isPaused) {
+                    pauseBtn.textContent = '▶️ Resume';
+                    overlay.style.display = 'flex';
+                } else {
+                    pauseBtn.textContent = '⏸️ Pause';
+                    overlay.style.display = 'none';
+                    this.startTime = Date.now() - this.elapsedTime;
+                }
+            }
+
+            formatTime(ms) {
+                const seconds = Math.floor(ms / 1000);
+                const minutes = Math.floor(seconds / 60);
+                return `${minutes.toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
+            }
+
+            restart() {
+                this.stopTimer();
+                this.elapsedTime = 0;
+                this.isPaused = false;
+                this.hintsUsed = 0;
+                document.getElementById('hintsLeft').textContent = `Hints: ${this.maxHints}`;
+                document.getElementById('pauseBtn').textContent = '⏸️ Pause';
+                document.querySelector('.paused-overlay').style.display = 'none';
+                
+                this.generatePuzzle();
+                this.startTimer();
+            }
+
+            updateStatistics() {
+                let gamesCompleted = parseInt(localStorage.getItem('hitoreGamesCompleted') || '0') + 1;
+                let totalTime = parseInt(localStorage.getItem('hitoreTotalTime') || '0') + this.elapsedTime;
+                
+                localStorage.setItem('hitoreGamesCompleted', gamesCompleted.toString());
+                localStorage.setItem('hitoreTotalTime', totalTime.toString());
+            }
+
+            loadStatistics() {
+                const bestTime = localStorage.getItem('hitorieBestTime');
+                const gamesCompleted = localStorage.getItem('hitoreGamesCompleted') || '0';
+                const totalTime = parseInt(localStorage.getItem('hitoreTotalTime') || '0');
+                
+                document.getElementById('bestTime').textContent = bestTime ? this.formatTime(parseInt(bestTime)) : '--:--';
+                document.getElementById('gamesCompleted').textContent = gamesCompleted;
+                document.getElementById('averageTime').textContent = gamesCompleted > 0 ? 
+                    this.formatTime(Math.floor(totalTime / parseInt(gamesCompleted))) : '--:--';
+            }
+        }
+
+        // Game instance
+        let game;
+
+        // Navigation functions
+        function showMenu() {
+            document.querySelectorAll('.container > .content > div').forEach(div => {
+                div.style.display = 'none';
+            });
+            document.getElementById('mainMenu').style.display = 'flex';
+            if (game) game.stopTimer();
+        }
+
+        function startGame() {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            
+            game = new HitoriGame();
+            game.generatePuzzle();
+            game.startTimer();
+        }
+
+        function nextGame() {
+            document.getElementById('victoryScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            
+            game = new HitoriGame();
+            game.generatePuzzle();
+            game.startTimer();
+        }
+
+        function showHowToPlay() {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('howToPlayScreen').style.display = 'block';
+        }
+
+        function showStatistics() {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('statisticsScreen').style.display = 'block';
+            if (game) game.loadStatistics();
+        }
+
+        function restartGame() {
+            if (game) game.restart();
+        }
+
+        function getHint() {
+            if (game) game.getHint();
+        }
+
+        function togglePause() {
+            if (game) game.togglePause();
+        }
+    </script>
+</body>
+</html>
