@@ -1,4 +1,45 @@
-<!DOCTYPE html>
+checkSolution() {
+                const errors = [];
+                
+                // Check if solution matches the correct pattern
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        if (this.solution[row][col] && !this.currentGrid[row][col]) {
+                            errors.push(`Cell at row ${row + 1}, column ${col + 1} should be shaded`);
+                        } else if (!this.solution[row][col] && this.currentGrid[row][col]) {
+                            errors.push(`Cell at row ${row + 1}, column ${col + 1} should NOT be shaded`);
+                        }
+                    }
+                }
+                
+                // Check for adjacent shaded cells
+                const adjacentErrors = new Set();
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        if (this.currentGrid[row][col]) {
+                            // Check adjacent cells
+                            const adjacent = [
+                                [row - 1, col], [row + 1, col],
+                                [row, col - 1], [row, col + 1]
+                            ];
+                            
+                            for (const [adjRow, adjCol] of adjacent) {
+                                if (adjRow >= 0 && adjRow < this.gridSize && 
+                                    adjCol >= 0 && adjCol < this.gridSize && 
+                                    this.currentGrid[adjRow][adjCol]) {
+                                    const errorKey = `${Math.min(row, adjRow)},${Math.min(col, adjCol)}-${Math.max(row, adjRow)},${Math.max(col, adjCol)}`;
+                                    if (!adjacentErrors.has(errorKey)) {
+                                        adjacentErrors.add(errorKey);
+                                        errors.push(`Adjacent shaded cells at (${row + 1}, ${col + 1}) and (${adjRow + 1}, ${adjCol + 1})`);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                return errors;
+            }<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -439,6 +480,25 @@
             border-radius: 20px;
             z-index: 10;
             backdrop-filter: blur(10px);
+            flex-direction: column;
+        }
+
+        .resume-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .resume-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
         }
 
         @media (max-width: 600px) {
@@ -461,6 +521,7 @@
             <div>
                 <div>⏸️ GAME PAUSED</div>
                 <div style="font-size: 1rem; margin-top: 1rem;">Click Resume to continue</div>
+                <button class="resume-btn" onclick="togglePause()">▶️ Resume Game</button>
             </div>
         </div>
         
@@ -512,7 +573,10 @@
                     <h3 id="feedbackTitle">Game Status</h3>
                     <div id="feedbackMessage"></div>
                     <div id="errorsList" class="error-list" style="display: none;"></div>
-                    <button class="menu-btn" onclick="closeFeedback()" style="margin-top: 1rem;">OK</button>
+                    <div style="margin-top: 1rem;">
+                        <button class="menu-btn" onclick="closeFeedback()" style="margin: 0.5rem;">OK</button>
+                        <button class="menu-btn" onclick="nextGameFromModal()" style="margin: 0.5rem; background: linear-gradient(135deg, #4caf50, #45a049);" id="nextBtn">▶️ Next</button>
+                    </div>
                 </div>
             </div>
 
@@ -611,8 +675,28 @@
             }
 
             generatePuzzle() {
-                // Generate a challenging 8x8 Hitori puzzle
-                this.grid = [
+                // Generate different puzzle variations for endless gameplay
+                this.createRandomPuzzle();
+                this.calculateSolution();
+                this.renderGrid();
+            }
+
+            createRandomPuzzle() {
+                // Create different puzzle patterns for variety
+                const puzzleVariations = [
+                    this.createPuzzleVariation1(),
+                    this.createPuzzleVariation2(),
+                    this.createPuzzleVariation3(),
+                    this.createPuzzleVariation4(),
+                    this.createPuzzleVariation5()
+                ];
+                
+                const randomIndex = Math.floor(Math.random() * puzzleVariations.length);
+                this.grid = puzzleVariations[randomIndex];
+            }
+
+            createPuzzleVariation1() {
+                return [
                     [1, 2, 3, 4, 2, 6, 7, 8],
                     [2, 3, 4, 5, 6, 7, 8, 1],
                     [3, 4, 5, 6, 7, 8, 1, 2],
@@ -622,48 +706,141 @@
                     [7, 8, 1, 2, 3, 4, 5, 6],
                     [8, 1, 2, 3, 4, 5, 6, 7]
                 ];
-
-                // Add strategic duplicates for moderate-hard difficulty
-                this.addDuplicates();
-                this.calculateSolution();
-                this.renderGrid();
             }
 
-            addDuplicates() {
-                // Add duplicates in strategic positions
-                this.grid[0][4] = 1; // Same as position [0][0]
-                this.grid[1][0] = 1; // Create column duplicate
-                this.grid[2][1] = 3; // Same as position [2][0]
-                this.grid[3][2] = 4; // Same as position [3][0]
-                this.grid[4][3] = 5; // Same as position [4][0]
-                this.grid[5][4] = 6; // Same as position [5][0]
-                this.grid[6][5] = 7; // Same as position [6][0]
-                this.grid[7][6] = 8; // Same as position [7][0]
-                
-                // Add more duplicates for complexity
-                this.grid[1][7] = 2;
-                this.grid[2][7] = 3;
-                this.grid[3][7] = 4;
-                this.grid[4][7] = 5;
+            createPuzzleVariation2() {
+                return [
+                    [8, 7, 6, 5, 4, 3, 2, 1],
+                    [1, 8, 7, 6, 5, 4, 3, 2],
+                    [2, 1, 8, 7, 6, 5, 4, 3],
+                    [3, 2, 1, 8, 7, 6, 5, 4],
+                    [4, 3, 2, 1, 8, 7, 6, 5],
+                    [5, 4, 3, 2, 1, 8, 7, 6],
+                    [6, 5, 4, 3, 2, 1, 8, 7],
+                    [7, 6, 5, 4, 3, 2, 1, 8]
+                ];
+            }
+
+            createPuzzleVariation3() {
+                return [
+                    [1, 2, 3, 4, 5, 6, 7, 8],
+                    [8, 1, 2, 3, 4, 5, 6, 7],
+                    [7, 8, 1, 2, 3, 4, 5, 6],
+                    [6, 7, 8, 1, 2, 3, 4, 5],
+                    [5, 6, 7, 8, 1, 2, 3, 4],
+                    [4, 5, 6, 7, 8, 1, 2, 3],
+                    [3, 4, 5, 6, 7, 8, 1, 2],
+                    [2, 3, 4, 5, 6, 7, 8, 1]
+                ];
+            }
+
+            createPuzzleVariation4() {
+                return [
+                    [4, 3, 2, 1, 8, 7, 6, 5],
+                    [3, 4, 1, 2, 7, 8, 5, 6],
+                    [2, 1, 4, 3, 6, 5, 8, 7],
+                    [1, 2, 3, 4, 5, 6, 7, 8],
+                    [8, 7, 6, 5, 4, 3, 2, 1],
+                    [7, 8, 5, 6, 3, 4, 1, 2],
+                    [6, 5, 8, 7, 2, 1, 4, 3],
+                    [5, 6, 7, 8, 1, 2, 3, 4]
+                ];
+            }
+
+            createPuzzleVariation5() {
+                return [
+                    [2, 4, 6, 8, 1, 3, 5, 7],
+                    [1, 3, 5, 7, 2, 4, 6, 8],
+                    [8, 6, 4, 2, 7, 5, 3, 1],
+                    [7, 5, 3, 1, 8, 6, 4, 2],
+                    [6, 8, 2, 4, 5, 7, 1, 3],
+                    [5, 7, 1, 3, 6, 8, 2, 4],
+                    [4, 2, 8, 6, 3, 1, 7, 5],
+                    [3, 1, 7, 5, 4, 2, 8, 6]
+                ];
             }
 
             calculateSolution() {
                 this.solution = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
                 
-                // Mark cells that should be shaded to eliminate duplicates
-                // These are based on the strategic duplicates we added
-                this.solution[0][4] = true; // Remove duplicate 1 in row 0
-                this.solution[1][0] = true; // Remove duplicate 1 in column 0
-                this.solution[2][1] = true; // Remove duplicate 3 in row 2
-                this.solution[3][2] = true; // Remove duplicate 4 in row 3
-                this.solution[4][3] = true; // Remove duplicate 5 in row 4
-                this.solution[5][4] = true; // Remove duplicate 6 in row 5
-                this.solution[6][5] = true; // Remove duplicate 7 in row 6
-                this.solution[7][6] = true; // Remove duplicate 8 in row 7
-                this.solution[1][7] = true; // Remove duplicate in column
-                this.solution[2][7] = true; // Remove duplicate in column
-                this.solution[3][7] = true; // Remove duplicate in column
-                this.solution[4][7] = true; // Remove duplicate in column
+                // Add duplicates and calculate solution dynamically
+                this.addStrategicDuplicates();
+                this.findOptimalSolution();
+            }
+
+            addStrategicDuplicates() {
+                // Add duplicates based on current grid pattern
+                const duplicatePositions = Math.floor(Math.random() * 3) + 2; // 2-4 duplicate groups
+                
+                for (let i = 0; i < duplicatePositions; i++) {
+                    const row = Math.floor(Math.random() * this.gridSize);
+                    const col1 = Math.floor(Math.random() * this.gridSize);
+                    const col2 = Math.floor(Math.random() * this.gridSize);
+                    
+                    if (col1 !== col2) {
+                        this.grid[row][col2] = this.grid[row][col1]; // Create row duplicate
+                    }
+                }
+                
+                // Add column duplicates
+                for (let i = 0; i < duplicatePositions; i++) {
+                    const col = Math.floor(Math.random() * this.gridSize);
+                    const row1 = Math.floor(Math.random() * this.gridSize);
+                    const row2 = Math.floor(Math.random() * this.gridSize);
+                    
+                    if (row1 !== row2) {
+                        this.grid[row2][col] = this.grid[row1][col]; // Create column duplicate
+                    }
+                }
+            }
+
+            findOptimalSolution() {
+                // Find cells that need to be shaded to eliminate all duplicates
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        if (this.hasDuplicateInRowOrColumn(row, col)) {
+                            // Use strategic logic to determine which duplicates to shade
+                            if (this.shouldShadeCell(row, col)) {
+                                this.solution[row][col] = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            hasDuplicateInRowOrColumn(row, col) {
+                const currentNum = this.grid[row][col];
+                
+                // Check row for duplicates
+                let rowCount = 0;
+                for (let c = 0; c < this.gridSize; c++) {
+                    if (this.grid[row][c] === currentNum) rowCount++;
+                }
+                
+                // Check column for duplicates
+                let colCount = 0;
+                for (let r = 0; r < this.gridSize; r++) {
+                    if (this.grid[r][col] === currentNum) colCount++;
+                }
+                
+                return rowCount > 1 || colCount > 1;
+            }
+
+            shouldShadeCell(row, col) {
+                // Strategic decision: shade cells that are later in sequence or create better connectivity
+                const currentNum = this.grid[row][col];
+                
+                // Check if this is the second/later occurrence in row
+                for (let c = 0; c < col; c++) {
+                    if (this.grid[row][c] === currentNum) return true;
+                }
+                
+                // Check if this is the second/later occurrence in column
+                for (let r = 0; r < row; r++) {
+                    if (this.grid[r][col] === currentNum) return true;
+                }
+                
+                return Math.random() < 0.5; // Add some randomness for variety
             }
 
             renderGrid() {
@@ -736,78 +913,65 @@
                     navigator.vibrate([50, 100, 50]);
                 }
                 
-                const errors = this.checkSolution();
-                
-                if (errors.length === 0) {
-                    // Perfect solution
-                    this.handleVictory();
-                } else {
-                    // Show errors
-                    this.showFeedback(errors);
-                }
-            }
-
-            checkSolution() {
-                const errors = [];
-                
-                // Check if solution matches the correct pattern
-                let correctCells = 0;
+                // Count shaded cells
+                let shadedCount = 0;
+                let correctShaded = 0;
                 let totalSolutionCells = 0;
                 
+                // Count solution cells
                 for (let row = 0; row < this.gridSize; row++) {
                     for (let col = 0; col < this.gridSize; col++) {
                         if (this.solution[row][col]) {
                             totalSolutionCells++;
-                            if (this.currentGrid[row][col]) {
-                                correctCells++;
-                            } else {
-                                errors.push(`Cell at row ${row + 1}, column ${col + 1} should be shaded`);
-                            }
-                        } else if (this.currentGrid[row][col]) {
-                            errors.push(`Cell at row ${row + 1}, column ${col + 1} should NOT be shaded`);
                         }
-                    }
-                }
-                
-                // Check for adjacent shaded cells
-                for (let row = 0; row < this.gridSize; row++) {
-                    for (let col = 0; col < this.gridSize; col++) {
                         if (this.currentGrid[row][col]) {
-                            // Check adjacent cells
-                            const adjacent = [
-                                [row - 1, col], [row + 1, col],
-                                [row, col - 1], [row, col + 1]
-                            ];
-                            
-                            for (const [adjRow, adjCol] of adjacent) {
-                                if (adjRow >= 0 && adjRow < this.gridSize && 
-                                    adjCol >= 0 && adjCol < this.gridSize && 
-                                    this.currentGrid[adjRow][adjCol]) {
-                                    errors.push(`Adjacent shaded cells at (${row + 1}, ${col + 1}) and (${adjRow + 1}, ${adjCol + 1})`);
-                                }
+                            shadedCount++;
+                            if (this.solution[row][col]) {
+                                correctShaded++;
                             }
                         }
                     }
                 }
                 
-                return errors;
+                const errors = this.checkSolution();
+                
+                // Case 1: Haven't started the game (no cells shaded)
+                if (shadedCount === 0) {
+                    this.showFeedback([], "🤔 You haven't shaded a single cell yet!", "Start by identifying duplicate numbers in rows and columns.");
+                }
+                // Case 2: Some cells shaded, all correct, but not complete
+                else if (shadedCount < totalSolutionCells && errors.length === 0) {
+                    this.showFeedback([], "👍 Getting better, keep going!", `You have ${shadedCount}/${totalSolutionCells} correct cells shaded. Continue finding the remaining duplicates!`);
+                }
+                // Case 3: Some cells shaded, but some/all are wrong
+                else if (shadedCount < totalSolutionCells && errors.length > 0) {
+                    this.showFeedback(errors, "😬 Oops, you made mistakes!", "Check the errors below and try again.");
+                }
+                // Case 4: All cells correctly shaded - Victory!
+                else if (shadedCount === totalSolutionCells && errors.length === 0) {
+                    this.showFeedback([], "🎉 Congratulations, you did it! 🏆", `Perfect solution! You completed it in ${this.formatTime(this.elapsedTime)}.`);
+                    this.handleVictory();
+                }
+                // Case 5: All cells shaded but some are wrong
+                else if (errors.length > 0) {
+                    this.showFeedback(errors, "😬 Oops, you made mistakes!", "You've shaded cells, but some are incorrect. Check the errors below.");
+                }
             }
 
-            showFeedback(errors) {
+            showFeedback(errors, title, message) {
                 const modal = document.getElementById('feedbackModal');
-                const title = document.getElementById('feedbackTitle');
-                const message = document.getElementById('feedbackMessage');
+                const titleElement = document.getElementById('feedbackTitle');
+                const messageElement = document.getElementById('feedbackMessage');
                 const errorsList = document.getElementById('errorsList');
                 
-                if (errors.length === 0) {
-                    title.textContent = '🎉 Perfect!';
-                    message.textContent = 'Congratulations! You solved the puzzle correctly!';
-                    errorsList.style.display = 'none';
-                } else {
-                    title.textContent = '❌ Not Quite Right';
-                    message.textContent = `You have ${errors.length} error(s) to fix:`;
+                titleElement.textContent = title;
+                messageElement.textContent = message;
+                
+                if (errors.length > 0) {
                     errorsList.style.display = 'block';
                     errorsList.innerHTML = errors.map(error => `<div class="error-item">• ${error}</div>`).join('');
+                } else {
+                    errorsList.style.display = 'none';
                 }
                 
                 modal.style.display = 'flex';
@@ -965,6 +1129,17 @@
             document.getElementById('mainMenu').style.display = 'none';
             document.getElementById('gameScreen').style.display = 'block';
             
+            game = new HitoriGame();
+            game.generatePuzzle();
+            game.startTimer();
+            addVibrationToButtons();
+        }
+
+        function nextGameFromModal() {
+            // Close the modal and start a new game
+            document.getElementById('feedbackModal').style.display = 'none';
+            
+            // Create new game instance with different puzzle
             game = new HitoriGame();
             game.generatePuzzle();
             game.startTimer();
