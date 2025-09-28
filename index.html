@@ -13,7 +13,9 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, rgba(222, 184, 135, 0.9) 0%, rgba(205, 164, 116, 0.9) 100%), 
+                        url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAGQAZADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/2Q==') no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -22,7 +24,7 @@
             overflow: hidden;
         }
 
-        /* Zen Background with animated elements */
+        /* Zen Background with animated elements - updated colors */
         body::before {
             content: '';
             position: fixed;
@@ -30,9 +32,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
+            background: rgba(139, 102, 79, 0.1);
             z-index: -2;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.2; }
         }
 
         /* Floating zen elements */
@@ -69,9 +76,9 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(245, 231, 201, 0.95);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(139, 102, 79, 0.3);
             backdrop-filter: blur(20px);
             padding: 2rem;
             max-width: 600px;
@@ -80,6 +87,7 @@
             position: relative;
             overflow: hidden;
             animation: slideIn 0.8s ease-out;
+            border: 2px solid rgba(139, 102, 79, 0.2);
         }
 
         @keyframes slideIn {
@@ -94,9 +102,9 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(45deg, transparent, rgba(205, 164, 116, 0.1), transparent);
             transform: rotate(45deg);
-            animation: shimmer 3s ease-in-out infinite;
+            animation: shimmer 4s ease-in-out infinite;
             z-index: 1;
             pointer-events: none;
         }
@@ -135,31 +143,38 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Title Screen */
-        .title-screen h1 {
-            font-size: 3rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            animation: glow 2s ease-in-out infinite alternate;
+        /* Title Screen with Entry Image */
+        .title-screen {
+            background: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAADAEADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD/2Q==') no-repeat center center;
+            background-size: contain;
+            background-color: rgba(222, 184, 135, 0.95);
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            margin: 1rem;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
 
-        @keyframes glow {
-            from { filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.3)); }
-            to { filter: drop-shadow(0 0 15px rgba(102, 126, 234, 0.6)); }
+        .title-screen h1 {
+            font-size: 0;
+            height: 0;
+            overflow: hidden;
+            margin: 0;
         }
 
         .developer-credit {
-            color: #666;
+            color: rgba(139, 102, 79, 0.8);
             font-size: 1.1rem;
             margin-bottom: 2rem;
             font-style: italic;
+            margin-top: auto;
         }
 
-        /* Menu and Buttons */
+        /* Menu and Buttons - updated zen colors */
         .menu {
             display: none;
             flex-direction: column;
@@ -167,7 +182,7 @@
         }
 
         .menu-btn, .control-btn, .submit-btn, .back-btn, .resume-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #8B6F47, #A0845C);
             color: white;
             border: none;
             padding: 1rem 2rem;
@@ -175,7 +190,7 @@
             font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(139, 111, 71, 0.3);
             position: relative;
             overflow: hidden;
             user-select: none;
@@ -183,7 +198,8 @@
 
         .menu-btn:hover, .control-btn:hover, .submit-btn:hover, .back-btn:hover, .resume-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(139, 111, 71, 0.4);
+            background: linear-gradient(135deg, #A0845C, #8B6F47);
         }
 
         .menu-btn:active, .control-btn:active, .submit-btn:active, .back-btn:active, .resume-btn:active {
@@ -218,7 +234,7 @@
         }
 
         .timer, .hints-left {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #8B6F47, #A0845C);
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 25px;
@@ -228,8 +244,8 @@
         }
 
         @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 10px rgba(102, 126, 234, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.6); }
+            0%, 100% { box-shadow: 0 0 10px rgba(139, 111, 71, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(139, 111, 71, 0.6); }
         }
 
         .game-controls {
@@ -239,9 +255,9 @@
         }
 
         .control-btn {
-            background: rgba(102, 126, 234, 0.1);
-            border: 2px solid #667eea;
-            color: #667eea;
+            background: rgba(139, 111, 71, 0.1);
+            border: 2px solid #8B6F47;
+            color: #8B6F47;
             padding: 0.5rem 1rem;
             border-radius: 10px;
             cursor: pointer;
@@ -250,7 +266,7 @@
         }
 
         .control-btn:hover {
-            background: #667eea;
+            background: #8B6F47;
             color: white;
         }
 
@@ -314,14 +330,14 @@
         }
 
         .cell.highlighted {
-            background: #fffacd;
+            background: #F5E7CD;
             animation: hintPulse 2s ease-in-out;
-            box-shadow: 0 0 15px rgba(255, 223, 0, 0.6);
+            box-shadow: 0 0 15px rgba(205, 164, 116, 0.8);
         }
 
         @keyframes hintPulse {
-            0%, 100% { transform: scale(1); background: #fffacd; }
-            50% { transform: scale(1.1); background: #ffeb3b; }
+            0%, 100% { transform: scale(1); background: #F5E7CD; }
+            50% { transform: scale(1.1); background: #E6D3A3; }
         }
 
         /* Feedback Modal */
@@ -372,24 +388,24 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Other screens */
+        /* Other screens - updated zen colors */
         .how-to-play, .about-game, .statistics {
             display: none;
             text-align: left;
         }
 
         .how-to-play h2, .about-game h2, .statistics h2 {
-            color: #667eea;
+            color: #8B6F47;
             margin-bottom: 1rem;
             text-align: center;
         }
 
         .rule, .about-section, .stat-item {
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(139, 111, 71, 0.1);
             padding: 1rem;
             border-radius: 10px;
             margin-bottom: 1rem;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #8B6F47;
         }
 
         .stat-item {
@@ -422,7 +438,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(139, 102, 79, 0.8);
             display: none;
             flex-direction: column;
             align-items: center;
@@ -613,6 +629,7 @@
                 this.currentHintIndex = 0;
                 this.availableHints = [];
                 this.originalGrid = [];
+                this.gameStarted = false; // Track if player has made first move
                 
                 this.loadStatistics();
             }
@@ -799,6 +816,12 @@
 
             toggleCell(row, col) {
                 if (this.isPaused) return;
+                
+                // Start timer on first move
+                if (!this.gameStarted) {
+                    this.gameStarted = true;
+                    this.startTimer();
+                }
                 
                 // Add vibration effect
                 if (navigator.vibrate) {
@@ -996,14 +1019,24 @@
             }
 
             startTimer() {
+                // Stop any existing timer first
+                this.stopTimer();
+                
+                // Reset timer values
                 this.startTime = Date.now();
                 this.elapsedTime = 0;
+                this.pauseStartTime = null;
+                
+                // Update display immediately
+                document.getElementById('timer').textContent = '00:00';
+                
+                // Start the timer interval
                 this.timerInterval = setInterval(() => {
                     if (!this.isPaused) {
                         this.elapsedTime = Date.now() - this.startTime;
                         document.getElementById('timer').textContent = this.formatTime(this.elapsedTime);
                     }
-                }, 100); // Update every 100ms for smoother timer
+                }, 100); // Update every 100ms for smoother display
             }
 
             stopTimer() {
@@ -1051,16 +1084,23 @@
                     navigator.vibrate([100, 50, 100]);
                 }
                 
+                // Stop timer first
                 this.stopTimer();
+                
+                // Reset all timer-related variables
                 this.elapsedTime = 0;
+                this.startTime = null;
                 this.isPaused = false;
                 this.hintsUsed = 0;
                 this.currentHintIndex = 0;
+                this.pauseStartTime = null;
+                this.gameStarted = false; // Reset game started flag
                 
                 // Reset UI
                 document.getElementById('hintsLeft').textContent = `Hints: ${this.maxHints}`;
                 document.getElementById('pauseBtn').textContent = '⏸️ Pause';
                 document.getElementById('pauseOverlay').style.display = 'none';
+                document.getElementById('timer').textContent = '00:00';
                 
                 // Restore original grid (same puzzle)
                 this.grid = JSON.parse(JSON.stringify(this.originalGrid));
@@ -1068,7 +1108,8 @@
                 
                 // Re-render the same grid
                 this.renderGrid();
-                this.startTimer();
+                
+                // Don't start timer - wait for first move
             }
 
             updateStatistics() {
@@ -1130,9 +1171,13 @@
             document.getElementById('mainMenu').style.display = 'none';
             document.getElementById('gameScreen').style.display = 'block';
             
+            // Create completely new game instance
             game = new HitoriGame();
             game.generatePuzzle();
-            game.startTimer();
+            
+            // Don't start timer - wait for first move
+            // Timer will start when player clicks first cell
+            
             addVibrationToButtons();
         }
 
@@ -1140,10 +1185,12 @@
             // Close the modal and start a new game
             document.getElementById('feedbackModal').style.display = 'none';
             
-            // Create new game instance with different puzzle
+            // Create completely new game instance with different puzzle
             game = new HitoriGame();
             game.generatePuzzle();
-            game.startTimer();
+            
+            // Don't start timer - wait for first move
+            
             addVibrationToButtons();
         }
 
@@ -1151,9 +1198,12 @@
             document.getElementById('victoryScreen').style.display = 'none';
             document.getElementById('gameScreen').style.display = 'block';
             
+            // Create completely new game instance
             game = new HitoriGame();
             game.generatePuzzle();
-            game.startTimer();
+            
+            // Don't start timer - wait for first move
+            
             addVibrationToButtons();
         }
 
