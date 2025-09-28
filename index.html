@@ -22,6 +22,7 @@
             overflow: hidden;
         }
 
+        /* Zen Background with animated elements */
         body::before {
             content: '';
             position: fixed;
@@ -31,7 +32,39 @@
             height: 100%;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
             opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* Floating zen elements */
+        .zen-element {
+            position: fixed;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
             z-index: -1;
+            pointer-events: none;
+        }
+
+        .zen-element:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .zen-element:nth-child(2) {
+            top: 20%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .zen-element:nth-child(3) {
+            bottom: 15%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
         }
 
         .container {
@@ -45,6 +78,12 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .container::before {
@@ -104,6 +143,12 @@
             background-clip: text;
             margin-bottom: 0.5rem;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.3)); }
+            to { filter: drop-shadow(0 0 15px rgba(102, 126, 234, 0.6)); }
         }
 
         .developer-credit {
@@ -120,7 +165,7 @@
             gap: 1rem;
         }
 
-        .menu-btn {
+        .menu-btn, .control-btn, .submit-btn {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
@@ -132,9 +177,10 @@
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
             position: relative;
             overflow: hidden;
+            user-select: none;
         }
 
-        .menu-btn::before {
+        .menu-btn::before, .control-btn::before, .submit-btn::before {
             content: '';
             position: absolute;
             top: 0;
@@ -145,13 +191,24 @@
             transition: left 0.5s;
         }
 
-        .menu-btn:hover::before {
+        .menu-btn:hover::before, .control-btn:hover::before, .submit-btn:hover::before {
             left: 100%;
         }
 
-        .menu-btn:hover {
+        .menu-btn:hover, .control-btn:hover, .submit-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .menu-btn:active, .control-btn:active, .submit-btn:active {
+            transform: translateY(0) scale(0.98);
+            animation: vibrate 0.3s ease-in-out;
+        }
+
+        @keyframes vibrate {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
         }
 
         /* Game Screen */
@@ -181,6 +238,12 @@
             border-radius: 25px;
             font-weight: bold;
             font-size: 0.9rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(102, 126, 234, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.6); }
         }
 
         .game-controls {
@@ -203,6 +266,19 @@
         .control-btn:hover {
             background: #667eea;
             color: white;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            padding: 1rem 2rem;
+            animation: submitPulse 2s infinite;
+        }
+
+        @keyframes submitPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.6); }
         }
 
         .grid {
@@ -228,50 +304,140 @@
             transition: all 0.3s ease;
             background: white;
             position: relative;
+            border-radius: 4px;
         }
 
         .cell:hover {
             background: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        .cell:active {
+            animation: cellVibrate 0.2s ease-in-out;
+        }
+
+        @keyframes cellVibrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.95); }
         }
 
         .cell.shaded {
             background: #333;
             color: white;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         .cell.highlighted {
             background: #fffacd;
-            animation: pulse 1s ease-in-out;
+            animation: hintPulse 2s ease-in-out;
+            box-shadow: 0 0 15px rgba(255, 223, 0, 0.6);
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        @keyframes hintPulse {
+            0%, 100% { transform: scale(1); background: #fffacd; }
+            50% { transform: scale(1.1); background: #ffeb3b; }
         }
 
-        .cell.invalid {
+        .cell.error {
             background: #ffebee;
             color: #d32f2f;
+            animation: errorShake 0.5s ease-in-out;
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .cell.correct {
+            background: #e8f5e8;
+            color: #2e7d32;
+            animation: correctGlow 1s ease-in-out;
+        }
+
+        @keyframes correctGlow {
+            0%, 100% { box-shadow: 0 0 5px rgba(46, 125, 50, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(46, 125, 50, 0.6); }
+        }
+
+        /* Feedback Modal */
+        .feedback-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .feedback-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .feedback-content h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .error-list {
+            text-align: left;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .error-item {
+            color: #d32f2f;
+            margin-bottom: 0.5rem;
         }
 
         /* How to Play Screen */
-        .how-to-play {
+        .how-to-play, .about-game {
             display: none;
             text-align: left;
         }
 
-        .how-to-play h2 {
+        .how-to-play h2, .about-game h2 {
             color: #667eea;
             margin-bottom: 1rem;
             text-align: center;
         }
 
-        .rule {
+        .rule, .about-section {
             background: rgba(102, 126, 234, 0.1);
             padding: 1rem;
             border-radius: 10px;
             margin-bottom: 1rem;
             border-left: 4px solid #667eea;
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-30px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         /* Statistics Screen */
@@ -287,6 +453,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(30px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         .back-btn {
@@ -297,11 +469,16 @@
             border-radius: 10px;
             cursor: pointer;
             margin-top: 1rem;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .back-btn:hover {
             background: #555;
+            transform: translateY(-2px);
+        }
+
+        .back-btn:active {
+            animation: vibrate 0.3s ease-in-out;
         }
 
         /* Victory Screen */
@@ -314,10 +491,10 @@
             color: #4caf50;
             font-size: 2rem;
             margin-bottom: 1rem;
-            animation: bounce 1s ease-in-out;
+            animation: victoryBounce 1s ease-in-out;
         }
 
-        @keyframes bounce {
+        @keyframes victoryBounce {
             0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
             40% { transform: translateY(-10px); }
             60% { transform: translateY(-5px); }
@@ -344,6 +521,17 @@
             font-weight: bold;
             border-radius: 20px;
             z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .pause-content {
+            text-align: center;
+            animation: pausePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pausePulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
         }
 
         @media (max-width: 600px) {
@@ -356,9 +544,17 @@
     </style>
 </head>
 <body>
+    <!-- Zen floating elements -->
+    <div class="zen-element">🕸️</div>
+    <div class="zen-element">🌸</div>
+    <div class="zen-element">🍃</div>
+    
     <div class="container">
         <div class="paused-overlay">
-            <div>GAME PAUSED</div>
+            <div class="pause-content">
+                <div>⏸️ GAME PAUSED</div>
+                <div style="font-size: 1rem; margin-top: 1rem;">Click Resume to continue</div>
+            </div>
         </div>
         
         <div class="content">
@@ -381,6 +577,7 @@
                 <h2 style="color: #667eea; margin-bottom: 1rem;">Main Menu</h2>
                 <button class="menu-btn" onclick="startGame()">🎯 Start Game</button>
                 <button class="menu-btn" onclick="showHowToPlay()">📚 How to Play</button>
+                <button class="menu-btn" onclick="showAboutGame()">🎌 About Hitori</button>
                 <button class="menu-btn" onclick="showStatistics()">📊 Statistics</button>
             </div>
 
@@ -399,6 +596,17 @@
                     </div>
                 </div>
                 <div class="grid" id="gameGrid"></div>
+                <button class="submit-btn" onclick="submitSolution()">✅ Submit Solution</button>
+            </div>
+
+            <!-- Feedback Modal -->
+            <div class="feedback-modal" id="feedbackModal">
+                <div class="feedback-content">
+                    <h3 id="feedbackTitle">Game Status</h3>
+                    <div id="feedbackMessage"></div>
+                    <div id="errorsList" class="error-list" style="display: none;"></div>
+                    <button class="menu-btn" onclick="closeFeedback()" style="margin-top: 1rem;">OK</button>
+                </div>
             </div>
 
             <!-- How to Play Screen -->
@@ -420,6 +628,29 @@
                     <p>• Start with numbers that appear most frequently</p>
                     <p>• Use the hint system when stuck (3 hints per game)</p>
                     <p>• Think ahead - shading cells affects connectivity</p>
+                    <p>• Use the Submit button to check your progress</p>
+                </div>
+                <button class="back-btn" onclick="showMenu()">Back to Menu</button>
+            </div>
+
+            <!-- About Hitori Screen -->
+            <div class="about-game" id="aboutGameScreen">
+                <h2>About Hitori</h2>
+                <div class="about-section">
+                    <h3>🎌 What is Hitori?</h3>
+                    <p>Hitori (ひとり) is a Japanese logic puzzle game whose name literally means "alone" or "leave me alone". It's a number-based puzzle that challenges players to eliminate duplicates while maintaining specific constraints.</p>
+                </div>
+                <div class="about-section">
+                    <h3>📚 History</h3>
+                    <p>Hitori was created by the famous Japanese puzzle company Nikoli, the same company behind Sudoku and Kakuro. Nikoli was founded in 1980 by Maki Kaji, who is often called the "Godfather of Sudoku". The company has created many of the world's most popular logic puzzles.</p>
+                </div>
+                <div class="about-section">
+                    <h3>🧘 The Zen Philosophy</h3>
+                    <p>Like many Japanese puzzles, Hitori embodies principles of minimalism and balance. The act of "leaving numbers alone" by shading them reflects the Zen concept of knowing when to act and when to refrain from action.</p>
+                </div>
+                <div class="about-section">
+                    <h3>🎯 Modern Appeal</h3>
+                    <p>Today, Hitori is enjoyed worldwide as a meditative puzzle that combines logical thinking with aesthetic simplicity. It offers a perfect balance of challenge and tranquility, making it ideal for both casual and serious puzzle enthusiasts.</p>
                 </div>
                 <button class="back-btn" onclick="showMenu()">Back to Menu</button>
             </div>
@@ -438,6 +669,10 @@
                 <div class="stat-item">
                     <span>Average Time</span>
                     <span id="averageTime">--:--</span>
+                </div>
+                <div class="stat-item">
+                    <span>Success Rate</span>
+                    <span id="successRate">--%</span>
                 </div>
                 <button class="back-btn" onclick="showMenu()">Back to Menu</button>
             </div>
@@ -472,348 +707,102 @@
                 this.loadStatistics();
             }
 
-            initializeGame() {
-                // Show loading screen for 2 seconds
-                setTimeout(() => {
-                    document.getElementById('loadingScreen').style.display = 'none';
-                    document.getElementById('titleScreen').style.display = 'block';
-                }, 2000);
-            }
-
-            // Initialize the game immediately when page loads
-            init() {
-                this.initializeGame();
-            }
-
             generatePuzzle() {
-                // Generate a valid completed grid first
-                this.generateValidGrid();
+                // Generate a challenging puzzle (moderate to hard)
+                this.grid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(0));
                 
-                // Create puzzle by duplicating some numbers
-                this.createPuzzleFromGrid();
+                // First create a base valid grid
+                this.generateBaseGrid();
                 
-                // Calculate solution
-                this.calculateSolution();
+                // Then strategically add duplicates to create puzzle
+                this.addStrategicDuplicates();
+                
+                // Calculate the correct solution
+                this.calculateCorrectSolution();
                 
                 this.renderGrid();
             }
 
-            generateValidGrid() {
-                this.grid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(0));
-                
-                // Fill grid with numbers 1-8, ensuring no immediate conflicts
+            generateBaseGrid() {
+                // Create a more challenging base grid with patterns
                 for (let row = 0; row < this.gridSize; row++) {
                     for (let col = 0; col < this.gridSize; col++) {
-                        let num = (row + col) % this.gridSize + 1;
-                        // Add some randomness
-                        if (Math.random() < 0.3) {
+                        // Use a more complex pattern to ensure variety
+                        let num = ((row * 3 + col * 2) % this.gridSize) + 1;
+                        
+                        // Add randomization for harder puzzles
+                        if (Math.random() < 0.4) {
                             num = Math.floor(Math.random() * this.gridSize) + 1;
                         }
+                        
                         this.grid[row][col] = num;
                     }
                 }
             }
 
-            createPuzzleFromGrid() {
-                // Add strategic duplicates to create puzzle
-                const duplicateCells = [];
+            addStrategicDuplicates() {
+                const duplicatePositions = [];
                 
+                // Add duplicates in rows (60% chance for moderate-hard difficulty)
                 for (let row = 0; row < this.gridSize; row++) {
+                    const numbersInRow = new Set();
                     for (let col = 0; col < this.gridSize; col++) {
-                        if (Math.random() < 0.4) { // 40% chance to create duplicate
-                            const originalNum = this.grid[row][col];
-                            
-                            // Find another position in same row or column to duplicate
-                            if (Math.random() < 0.5) {
-                                // Duplicate in same row
-                                const targetCol = Math.floor(Math.random() * this.gridSize);
-                                if (targetCol !== col) {
-                                    this.grid[row][targetCol] = originalNum;
-                                    duplicateCells.push([row, col], [row, targetCol]);
-                                }
-                            } else {
-                                // Duplicate in same column
-                                const targetRow = Math.floor(Math.random() * this.gridSize);
-                                if (targetRow !== row) {
-                                    this.grid[targetRow][col] = originalNum;
-                                    duplicateCells.push([row, col], [targetRow, col]);
-                                }
-                            }
+                        numbersInRow.add(this.grid[row][col]);
+                    }
+                    
+                    // Create 2-3 duplicates per row
+                    const targetDuplicates = 2 + Math.floor(Math.random() * 2);
+                    for (let d = 0; d < targetDuplicates; d++) {
+                        const sourceCol = Math.floor(Math.random() * this.gridSize);
+                        const targetCol = Math.floor(Math.random() * this.gridSize);
+                        
+                        if (sourceCol !== targetCol) {
+                            this.grid[row][targetCol] = this.grid[row][sourceCol];
+                            duplicatePositions.push([row, sourceCol], [row, targetCol]);
+                        }
+                    }
+                }
+                
+                // Add duplicates in columns
+                for (let col = 0; col < this.gridSize; col++) {
+                    const targetDuplicates = 1 + Math.floor(Math.random() * 2);
+                    for (let d = 0; d < targetDuplicates; d++) {
+                        const sourceRow = Math.floor(Math.random() * this.gridSize);
+                        const targetRow = Math.floor(Math.random() * this.gridSize);
+                        
+                        if (sourceRow !== targetRow) {
+                            this.grid[targetRow][col] = this.grid[sourceRow][col];
                         }
                     }
                 }
             }
 
-            calculateSolution() {
+            calculateCorrectSolution() {
                 this.solution = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
                 
-                // Simple solution calculation - shade cells that create duplicates
+                // For each cell, determine if it should be shaded
                 for (let row = 0; row < this.gridSize; row++) {
                     for (let col = 0; col < this.gridSize; col++) {
-                        const currentNum = this.grid[row][col];
-                        
-                        // Check for duplicates in row
-                        let rowDuplicates = [];
-                        for (let c = 0; c < this.gridSize; c++) {
-                            if (this.grid[row][c] === currentNum) {
-                                rowDuplicates.push([row, c]);
-                            }
-                        }
-                        
-                        // Check for duplicates in column
-                        let colDuplicates = [];
-                        for (let r = 0; r < this.gridSize; r++) {
-                            if (this.grid[r][col] === currentNum) {
-                                colDuplicates.push([r, col]);
-                            }
-                        }
-                        
-                        // If there are duplicates, shade some of them
-                        if (rowDuplicates.length > 1) {
-                            // Shade every other duplicate in row
-                            for (let i = 1; i < rowDuplicates.length; i += 2) {
-                                const [r, c] = rowDuplicates[i];
-                                this.solution[r][c] = true;
-                            }
-                        }
-                        
-                        if (colDuplicates.length > 1) {
-                            // Shade every other duplicate in column
-                            for (let i = 1; i < colDuplicates.length; i += 2) {
-                                const [r, c] = colDuplicates[i];
-                                this.solution[r][c] = true;
-                            }
+                        if (this.shouldBeShaded(row, col)) {
+                            this.solution[row][col] = true;
                         }
                     }
                 }
             }
 
-            renderGrid() {
-                const gridElement = document.getElementById('gameGrid');
-                gridElement.innerHTML = '';
+            shouldBeShaded(row, col) {
+                const currentNum = this.grid[row][col];
                 
-                this.currentGrid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
-                
-                for (let row = 0; row < this.gridSize; row++) {
-                    for (let col = 0; col < this.gridSize; col++) {
-                        const cell = document.createElement('div');
-                        cell.className = 'cell';
-                        cell.textContent = this.grid[row][col];
-                        cell.onclick = () => this.toggleCell(row, col);
-                        cell.id = `cell-${row}-${col}`;
-                        gridElement.appendChild(cell);
-                    }
-                }
-            }
-
-            toggleCell(row, col) {
-                if (this.isPaused) return;
-                
-                this.currentGrid[row][col] = !this.currentGrid[row][col];
-                const cell = document.getElementById(`cell-${row}-${col}`);
-                
-                if (this.currentGrid[row][col]) {
-                    cell.classList.add('shaded');
-                } else {
-                    cell.classList.remove('shaded');
-                }
-                
-                this.checkVictory();
-            }
-
-            getHint() {
-                if (this.hintsUsed >= this.maxHints || this.isPaused) return;
-                
-                this.hintsUsed++;
-                document.getElementById('hintsLeft').textContent = `Hints: ${this.maxHints - this.hintsUsed}`;
-                
-                // Find a cell that should be shaded but isn't
-                for (let row = 0; row < this.gridSize; row++) {
-                    for (let col = 0; col < this.gridSize; col++) {
-                        if (this.solution[row][col] && !this.currentGrid[row][col]) {
-                            const cell = document.getElementById(`cell-${row}-${col}`);
-                            cell.classList.add('highlighted');
-                            setTimeout(() => {
-                                cell.classList.remove('highlighted');
-                            }, 2000);
-                            return;
-                        }
-                    }
-                }
-            }
-
-            checkVictory() {
-                // Simple victory check - if current grid matches solution pattern
-                let matches = 0;
-                let total = 0;
-                
-                for (let row = 0; row < this.gridSize; row++) {
-                    for (let col = 0; col < this.gridSize; col++) {
-                        total++;
-                        if (this.currentGrid[row][col] === this.solution[row][col]) {
-                            matches++;
-                        }
+                // Check for duplicates in row
+                const rowDuplicates = [];
+                for (let c = 0; c < this.gridSize; c++) {
+                    if (this.grid[row][c] === currentNum) {
+                        rowDuplicates.push(c);
                     }
                 }
                 
-                // Victory if 90% or more cells match the solution
-                if (matches >= total * 0.9) {
-                    this.handleVictory();
-                }
-            }
-
-            handleVictory() {
-                this.stopTimer();
-                
-                // Update statistics
-                this.updateStatistics();
-                
-                // Show victory screen
-                document.getElementById('gameScreen').style.display = 'none';
-                document.getElementById('victoryScreen').style.display = 'block';
-                document.getElementById('completionTime').textContent = `Time: ${this.formatTime(this.elapsedTime)}`;
-                
-                const bestTime = localStorage.getItem('hitorieBestTime');
-                if (!bestTime || this.elapsedTime < parseInt(bestTime)) {
-                    localStorage.setItem('hitorieBestTime', this.elapsedTime.toString());
-                    document.getElementById('bestTimeMessage').textContent = '🎉 New Best Time!';
-                } else {
-                    document.getElementById('bestTimeMessage').textContent = `Best: ${this.formatTime(parseInt(bestTime))}`;
-                }
-            }
-
-            startTimer() {
-                this.startTime = Date.now() - this.elapsedTime;
-                this.timerInterval = setInterval(() => {
-                    if (!this.isPaused) {
-                        this.elapsedTime = Date.now() - this.startTime;
-                        document.getElementById('timer').textContent = this.formatTime(this.elapsedTime);
-                    }
-                }, 1000);
-            }
-
-            stopTimer() {
-                if (this.timerInterval) {
-                    clearInterval(this.timerInterval);
-                    this.timerInterval = null;
-                }
-            }
-
-            togglePause() {
-                this.isPaused = !this.isPaused;
-                const pauseBtn = document.getElementById('pauseBtn');
-                const overlay = document.querySelector('.paused-overlay');
-                
-                if (this.isPaused) {
-                    pauseBtn.textContent = '▶️ Resume';
-                    overlay.style.display = 'flex';
-                } else {
-                    pauseBtn.textContent = '⏸️ Pause';
-                    overlay.style.display = 'none';
-                    this.startTime = Date.now() - this.elapsedTime;
-                }
-            }
-
-            formatTime(ms) {
-                const seconds = Math.floor(ms / 1000);
-                const minutes = Math.floor(seconds / 60);
-                return `${minutes.toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
-            }
-
-            restart() {
-                this.stopTimer();
-                this.elapsedTime = 0;
-                this.isPaused = false;
-                this.hintsUsed = 0;
-                document.getElementById('hintsLeft').textContent = `Hints: ${this.maxHints}`;
-                document.getElementById('pauseBtn').textContent = '⏸️ Pause';
-                document.querySelector('.paused-overlay').style.display = 'none';
-                
-                this.generatePuzzle();
-                this.startTimer();
-            }
-
-            updateStatistics() {
-                let gamesCompleted = parseInt(localStorage.getItem('hitoreGamesCompleted') || '0') + 1;
-                let totalTime = parseInt(localStorage.getItem('hitoreTotalTime') || '0') + this.elapsedTime;
-                
-                localStorage.setItem('hitoreGamesCompleted', gamesCompleted.toString());
-                localStorage.setItem('hitoreTotalTime', totalTime.toString());
-            }
-
-            loadStatistics() {
-                const bestTime = localStorage.getItem('hitorieBestTime');
-                const gamesCompleted = localStorage.getItem('hitoreGamesCompleted') || '0';
-                const totalTime = parseInt(localStorage.getItem('hitoreTotalTime') || '0');
-                
-                document.getElementById('bestTime').textContent = bestTime ? this.formatTime(parseInt(bestTime)) : '--:--';
-                document.getElementById('gamesCompleted').textContent = gamesCompleted;
-                document.getElementById('averageTime').textContent = gamesCompleted > 0 ? 
-                    this.formatTime(Math.floor(totalTime / parseInt(gamesCompleted))) : '--:--';
-            }
-        }
-
-        // Game instance
-        let game;
-
-        // Initialize game when page loads
-        window.addEventListener('DOMContentLoaded', function() {
-            // Start the loading sequence immediately
-            setTimeout(() => {
-                document.getElementById('loadingScreen').style.display = 'none';
-                document.getElementById('titleScreen').style.display = 'block';
-            }, 2000);
-        });
-
-        // Navigation functions
-        function showMenu() {
-            document.querySelectorAll('.container > .content > div').forEach(div => {
-                div.style.display = 'none';
-            });
-            document.getElementById('mainMenu').style.display = 'flex';
-            if (game) game.stopTimer();
-        }
-
-        function startGame() {
-            document.getElementById('mainMenu').style.display = 'none';
-            document.getElementById('gameScreen').style.display = 'block';
-            
-            game = new HitoriGame();
-            game.generatePuzzle();
-            game.startTimer();
-        }
-
-        function nextGame() {
-            document.getElementById('victoryScreen').style.display = 'none';
-            document.getElementById('gameScreen').style.display = 'block';
-            
-            game = new HitoriGame();
-            game.generatePuzzle();
-            game.startTimer();
-        }
-
-        function showHowToPlay() {
-            document.getElementById('mainMenu').style.display = 'none';
-            document.getElementById('howToPlayScreen').style.display = 'block';
-        }
-
-        function showStatistics() {
-            document.getElementById('mainMenu').style.display = 'none';
-            document.getElementById('statisticsScreen').style.display = 'block';
-            if (game) game.loadStatistics();
-        }
-
-        function restartGame() {
-            if (game) game.restart();
-        }
-
-        function getHint() {
-            if (game) game.getHint();
-        }
-
-        function togglePause() {
-            if (game) game.togglePause();
-        }
-    </script>
-</body>
-</html>
+                // Check for duplicates in column
+                const colDuplicates = [];
+                for (let r = 0; r < this.gridSize; r++) {
+                    if (this.grid[r][col] === currentNum) {
+                        col
