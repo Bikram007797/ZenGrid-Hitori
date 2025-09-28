@@ -470,7 +470,6 @@
                 this.maxHints = 3;
                 
                 this.loadStatistics();
-                this.initializeGame();
             }
 
             initializeGame() {
@@ -479,6 +478,11 @@
                     document.getElementById('loadingScreen').style.display = 'none';
                     document.getElementById('titleScreen').style.display = 'block';
                 }, 2000);
+            }
+
+            // Initialize the game immediately when page loads
+            init() {
+                this.initializeGame();
             }
 
             generatePuzzle() {
@@ -751,6 +755,15 @@
 
         // Game instance
         let game;
+
+        // Initialize game when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            // Start the loading sequence immediately
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('titleScreen').style.display = 'block';
+            }, 2000);
+        });
 
         // Navigation functions
         function showMenu() {
