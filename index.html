@@ -14,8 +14,7 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, rgba(222, 184, 135, 0.9) 0%, rgba(205, 164, 116, 0.9) 100%), 
-                        url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAGQAZADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/2Q==') no-repeat center center fixed;
-            background-size: cover;
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23DEB887" width="100" height="100"/></svg>');
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -24,7 +23,6 @@
             overflow: hidden;
         }
 
-        /* Zen Background with animated elements - updated colors */
         body::before {
             content: '';
             position: fixed;
@@ -42,7 +40,6 @@
             50% { opacity: 0.2; }
         }
 
-        /* Floating zen elements */
         .zen-element {
             position: fixed;
             opacity: 0.1;
@@ -132,7 +129,7 @@
             width: 60px;
             height: 60px;
             border: 4px solid #e3e3e3;
-            border-top: 4px solid #667eea;
+            border-top: 4px solid #8B6F47;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-bottom: 2rem;
@@ -143,38 +140,83 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Title Screen with Entry Image */
+        /* Title Screen */
         .title-screen {
-            background: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAADAEADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD/2Q==') no-repeat center center;
-            background-size: contain;
-            background-color: rgba(222, 184, 135, 0.95);
-            border-radius: 15px;
-            padding: 3rem 2rem;
-            margin: 1rem;
-            min-height: 400px;
-            display: flex;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative;
+            padding: 1rem;
         }
 
-        .title-screen h1 {
-            font-size: 0;
-            height: 0;
-            overflow: hidden;
-            margin: 0;
-        }
-
-        .developer-credit {
-            color: rgba(139, 102, 79, 0.8);
-            font-size: 1.1rem;
+        .entry-image {
+            width: 100%;
+            max-width: 450px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(139, 111, 71, 0.4);
             margin-bottom: 2rem;
-            font-style: italic;
-            margin-top: auto;
+            animation: imageFloat 3s ease-in-out infinite;
         }
 
-        /* Menu and Buttons - updated zen colors */
+        @keyframes imageFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Page Transition */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(222, 184, 135, 0.98) 0%, rgba(205, 164, 116, 0.98) 100%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeInOut 1.5s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .transition-title {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 3.5rem;
+            color: #8B6F47;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(139, 111, 71, 0.4);
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+            animation: slideInTitle 1s ease-out;
+            text-align: center;
+        }
+
+        @keyframes slideInTitle {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .transition-developer {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1.2rem;
+            color: rgba(139, 111, 71, 0.8);
+            font-style: italic;
+            animation: slideInDev 2s ease-out 0.5s backwards;
+        }
+
+        @keyframes slideInDev {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Menu and Buttons */
         .menu {
             display: none;
             flex-direction: column;
@@ -388,7 +430,7 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Other screens - updated zen colors */
+        /* Other screens */
         .how-to-play, .about-game, .statistics {
             display: none;
             text-align: left;
@@ -459,7 +501,7 @@
 
         @media (max-width: 600px) {
             .container { padding: 1rem; }
-            .title-screen h1 { font-size: 2rem; }
+            .transition-title { font-size: 2.5rem; }
             .grid { max-width: 300px; }
             .cell { font-size: 1rem; }
             .game-header { flex-direction: column; }
@@ -471,6 +513,12 @@
     <div class="zen-element">🕸️</div>
     <div class="zen-element">🌸</div>
     <div class="zen-element">🍃</div>
+    
+    <!-- Page Transition Animation -->
+    <div class="page-transition" id="pageTransition">
+        <div class="transition-title">ZenGrid Hitori</div>
+        <div class="transition-developer">Developed by Bikram</div>
+    </div>
     
     <div class="container">
         <!-- Pause Overlay with Resume Button -->
@@ -486,19 +534,20 @@
                 <div class="loader"></div>
                 <h2>Loading ZenGrid Hitori...</h2>
                 <p>Preparing your zen puzzle experience</p>
-                 <p>This game developed by Bikram</p>
+                <p>This game developed by Bikram</p>
             </div>
 
-            <!-- Title Screen -->
-            <div class="title-screen" id="titleScreen" style="display: none;">
+            <!-- Title Screen with Entry Image -->
+            <div class="title-screen" id="titleScreen">
+                <img src="https://i.postimg.cc/T3BvDBkM/image.png" alt="ZenGrid Hitori" class="entry-image">
                 <h1>ZenGrid Hitori</h1>
                 <div class="developer-credit">Developed by Bikram</div>
-                <button class="menu-btn" onclick="showMenu()">Enter Game</button>
+                <button class="menu-btn" onclick="showMenuWithTransition()">🎋 Enter Game</button>
             </div>
 
             <!-- Main Menu -->
             <div class="menu" id="mainMenu">
-                <h2 style="color: #667eea; margin-bottom: 1rem;">Main Menu</h2>
+                <h2 style="color: #8B6F47; margin-bottom: 1rem;">Main Menu</h2>
                 <button class="menu-btn" onclick="startGame()">🎯 Start Game</button>
                 <button class="menu-btn" onclick="showHowToPlay()">📚 How to Play</button>
                 <button class="menu-btn" onclick="showAboutGame()">🎌 About Hitori</button>
@@ -516,7 +565,7 @@
                         <button class="control-btn" onclick="togglePause()" id="pauseBtn">⏸️ Pause</button>
                         <button class="control-btn" onclick="getHint()">💡 Hint</button>
                         <button class="control-btn" onclick="restartGame()">🔄 Restart</button>
-                        <button class="control-btn" onclick="showMenu()">🏠 Menu</button>
+                        <button class="control-btn" onclick="showMenuBack()">🏠 Menu</button>
                     </div>
                 </div>
                 <div class="grid" id="gameGrid"></div>
@@ -557,7 +606,7 @@
                     <p>• Think ahead - shading cells affects connectivity</p>
                     <p>• Use the Submit button to check your progress</p>
                 </div>
-                <button class="back-btn" onclick="showMenu()">Back to Menu</button>
+                <button class="back-btn" onclick="showMenuWithTransition()">Back to Menu</button>
             </div>
 
             <!-- About Hitori Screen -->
@@ -575,7 +624,7 @@
                     <h3>🧘 The Zen Philosophy</h3>
                     <p>Like many Japanese puzzles, Hitori embodies principles of minimalism and balance. The act of "leaving numbers alone" by shading them reflects the Zen concept of knowing when to act and when to refrain from action.</p>
                 </div>
-                <button class="back-btn" onclick="showMenu()">Back to Menu</button>
+                <button class="back-btn" onclick="showMenuWithTransition()">Back to Menu</button>
             </div>
 
             <!-- Statistics Screen -->
@@ -593,17 +642,17 @@
                     <span>Average Time</span>
                     <span id="averageTime">--:--</span>
                 </div>
-                <button class="back-btn" onclick="showMenu()">Back to Menu</button>
+                <button class="back-btn" onclick="showMenuWithTransition()">Back to Menu</button>
             </div>
 
             <!-- Victory Screen -->
             <div class="victory-screen" id="victoryScreen">
                 <h2>🎉 Congratulations!</h2>
-                <div class="time-display" id="completionTime">Time: 00:00</div>
+                <div class="time-display" id="completionTime" style="font-size: 1.5rem; color: #8B6F47; margin-bottom: 1rem;">Time: 00:00</div>
                 <p id="bestTimeMessage"></p>
                 <div style="margin-top: 2rem;">
                     <button class="menu-btn" onclick="nextGame()" style="margin: 0.5rem;">▶️ Next Game</button>
-                    <button class="menu-btn" onclick="showMenu()" style="margin: 0.5rem;">🏠 Main Menu</button>
+                    <button class="menu-btn" onclick="showMenuWithTransition()" style="margin: 0.5rem;">🏠 Main Menu</button>
                 </div>
             </div>
         </div>
@@ -630,52 +679,45 @@
                 this.currentHintIndex = 0;
                 this.availableHints = [];
                 this.originalGrid = [];
-                this.gameStarted = false; // Track if player has made first move
+                this.gameStarted = false;
                 
                 this.loadStatistics();
             }
 
             generatePuzzle() {
-                // Generate completely random puzzle for endless gameplay
                 this.createRandomGrid();
                 this.addRandomDuplicates();
                 this.calculateSolution();
                 this.prepareHints();
-                
-                // Store original grid for restart functionality
                 this.originalGrid = JSON.parse(JSON.stringify(this.grid));
-                
                 this.renderGrid();
             }
 
             createRandomGrid() {
-                // Create a completely random 8x8 grid with numbers 1-8
                 this.grid = [];
                 for (let row = 0; row < this.gridSize; row++) {
                     this.grid[row] = [];
                     for (let col = 0; col < this.gridSize; col++) {
-                        // Use different random patterns for infinite variety
                         let num;
                         const pattern = Math.floor(Math.random() * 5);
                         
                         switch(pattern) {
-                            case 0: // Diagonal pattern
+                            case 0:
                                 num = ((row + col) % this.gridSize) + 1;
                                 break;
-                            case 1: // Reverse diagonal
+                            case 1:
                                 num = ((row - col + this.gridSize) % this.gridSize) + 1;
                                 break;
-                            case 2: // Circular pattern
+                            case 2:
                                 num = ((row * 2 + col) % this.gridSize) + 1;
                                 break;
-                            case 3: // Random with constraints
+                            case 3:
                                 num = ((row * 3 + col * 2) % this.gridSize) + 1;
                                 break;
-                            default: // Pure random
+                            default:
                                 num = Math.floor(Math.random() * this.gridSize) + 1;
                         }
                         
-                        // Add randomization to make each puzzle unique
                         if (Math.random() < 0.4) {
                             num = Math.floor(Math.random() * this.gridSize) + 1;
                         }
@@ -686,13 +728,12 @@
             }
 
             addRandomDuplicates() {
-                const numDuplicateGroups = 8 + Math.floor(Math.random() * 8); // 8-15 duplicate groups
+                const numDuplicateGroups = 8 + Math.floor(Math.random() * 8);
                 
                 for (let i = 0; i < numDuplicateGroups; i++) {
                     const createRowDuplicate = Math.random() < 0.5;
                     
                     if (createRowDuplicate) {
-                        // Create row duplicate
                         const row = Math.floor(Math.random() * this.gridSize);
                         const col1 = Math.floor(Math.random() * this.gridSize);
                         const col2 = Math.floor(Math.random() * this.gridSize);
@@ -701,7 +742,6 @@
                             this.grid[row][col2] = this.grid[row][col1];
                         }
                     } else {
-                        // Create column duplicate
                         const col = Math.floor(Math.random() * this.gridSize);
                         const row1 = Math.floor(Math.random() * this.gridSize);
                         const row2 = Math.floor(Math.random() * this.gridSize);
@@ -716,7 +756,6 @@
             calculateSolution() {
                 this.solution = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
                 
-                // Find all cells that need to be shaded to eliminate duplicates
                 for (let row = 0; row < this.gridSize; row++) {
                     for (let col = 0; col < this.gridSize; col++) {
                         if (this.shouldBeShaded(row, col)) {
@@ -729,7 +768,6 @@
             shouldBeShaded(row, col) {
                 const currentNum = this.grid[row][col];
                 
-                // Find first occurrence of this number in the row
                 let firstInRow = -1;
                 for (let c = 0; c < this.gridSize; c++) {
                     if (this.grid[row][c] === currentNum) {
@@ -738,7 +776,6 @@
                     }
                 }
                 
-                // Find first occurrence of this number in the column
                 let firstInCol = -1;
                 for (let r = 0; r < this.gridSize; r++) {
                     if (this.grid[r][col] === currentNum) {
@@ -747,10 +784,8 @@
                     }
                 }
                 
-                // Shade if this is NOT the first occurrence in row or column
                 let shouldShade = false;
                 
-                // Check row duplicates
                 if (firstInRow !== col) {
                     for (let c = 0; c < this.gridSize; c++) {
                         if (c !== col && this.grid[row][c] === currentNum) {
@@ -760,7 +795,6 @@
                     }
                 }
                 
-                // Check column duplicates
                 if (firstInCol !== row) {
                     for (let r = 0; r < this.gridSize; r++) {
                         if (r !== row && this.grid[r][col] === currentNum) {
@@ -774,7 +808,6 @@
             }
 
             prepareHints() {
-                // Prepare all hint positions for sequential hints
                 this.availableHints = [];
                 this.currentHintIndex = 0;
                 
@@ -786,7 +819,6 @@
                     }
                 }
                 
-                // Shuffle hints for variety
                 this.shuffleArray(this.availableHints);
             }
 
@@ -818,13 +850,11 @@
             toggleCell(row, col) {
                 if (this.isPaused) return;
                 
-                // Start timer on first move
                 if (!this.gameStarted) {
                     this.gameStarted = true;
                     this.startTimer();
                 }
                 
-                // Add vibration effect
                 if (navigator.vibrate) {
                     navigator.vibrate(50);
                 }
@@ -842,7 +872,6 @@
             getHint() {
                 if (this.hintsUsed >= this.maxHints || this.isPaused) return;
                 
-                // Add vibration effect
                 if (navigator.vibrate) {
                     navigator.vibrate([100, 50, 100]);
                 }
@@ -850,18 +879,16 @@
                 this.hintsUsed++;
                 document.getElementById('hintsLeft').textContent = `Hints: ${this.maxHints - this.hintsUsed}`;
                 
-                // Find next available hint that hasn't been shown yet
                 let hintFound = false;
                 let attempts = 0;
                 
                 while (!hintFound && attempts < this.availableHints.length) {
                     if (this.currentHintIndex >= this.availableHints.length) {
-                        this.currentHintIndex = 0; // Reset if we've shown all hints
+                        this.currentHintIndex = 0;
                     }
                     
                     const [row, col] = this.availableHints[this.currentHintIndex];
                     
-                    // Only show hint if this cell isn't already shaded correctly
                     if (this.solution[row][col] && !this.currentGrid[row][col]) {
                         const cell = document.getElementById(`cell-${row}-${col}`);
                         cell.classList.add('highlighted');
@@ -879,16 +906,13 @@
             submitSolution() {
                 if (this.isPaused) return;
                 
-                // Add vibration effect
                 if (navigator.vibrate) {
                     navigator.vibrate([50, 100, 50]);
                 }
                 
-                // Count shaded cells
                 let shadedCount = 0;
                 let totalSolutionCells = 0;
                 
-                // Count solution cells and current shaded cells
                 for (let row = 0; row < this.gridSize; row++) {
                     for (let col = 0; col < this.gridSize; col++) {
                         if (this.solution[row][col]) {
@@ -902,24 +926,19 @@
                 
                 const errors = this.checkSolution();
                 
-                // Case 1: Haven't started the game (no cells shaded)
                 if (shadedCount === 0) {
                     this.showFeedback([], "🤔 You haven't shaded a single cell yet!", "Start by identifying duplicate numbers in rows and columns.");
                 }
-                // Case 2: Some cells shaded, all correct, but not complete
                 else if (shadedCount < totalSolutionCells && errors.length === 0) {
                     this.showFeedback([], "👍 Getting better, keep going!", `You have ${shadedCount}/${totalSolutionCells} correct cells shaded. Continue finding the remaining duplicates!`);
                 }
-                // Case 3: Some cells shaded, but some/all are wrong
                 else if (shadedCount < totalSolutionCells && errors.length > 0) {
                     this.showFeedback(errors, "😬 Oops, you made mistakes!", "Check the errors below and try again.");
                 }
-                // Case 4: All cells correctly shaded - Victory!
                 else if (shadedCount === totalSolutionCells && errors.length === 0) {
                     this.showFeedback([], "🎉 Congratulations, you did it! 🏆", `Perfect solution! You completed it in ${this.formatTime(this.elapsedTime)}.`);
                     this.handleVictory();
                 }
-                // Case 5: All cells shaded but some are wrong
                 else if (errors.length > 0) {
                     this.showFeedback(errors, "😬 Oops, you made mistakes!", "You've shaded cells, but some are incorrect. Check the errors below.");
                 }
@@ -928,7 +947,6 @@
             checkSolution() {
                 const errors = [];
                 
-                // Check if solution matches the correct pattern
                 for (let row = 0; row < this.gridSize; row++) {
                     for (let col = 0; col < this.gridSize; col++) {
                         if (this.solution[row][col] && !this.currentGrid[row][col]) {
@@ -939,7 +957,6 @@
                     }
                 }
                 
-                // Check for adjacent shaded cells
                 const adjacentErrors = new Set();
                 for (let row = 0; row < this.gridSize; row++) {
                     for (let col = 0; col < this.gridSize; col++) {
@@ -993,19 +1010,15 @@
             handleVictory() {
                 this.stopTimer();
                 
-                // Play victory sound
                 const victorySound = document.getElementById('victorySound');
                 victorySound.play().catch(e => console.log('Sound not available'));
                 
-                // Add vibration effect
                 if (navigator.vibrate) {
                     navigator.vibrate([200, 100, 200, 100, 200]);
                 }
                 
-                // Update statistics
                 this.updateStatistics();
                 
-                // Show victory screen
                 document.getElementById('gameScreen').style.display = 'none';
                 document.getElementById('victoryScreen').style.display = 'block';
                 document.getElementById('completionTime').textContent = `Time: ${this.formatTime(this.elapsedTime)}`;
@@ -1020,24 +1033,18 @@
             }
 
             startTimer() {
-                // Stop any existing timer first
                 this.stopTimer();
-                
-                // Reset timer values
                 this.startTime = Date.now();
                 this.elapsedTime = 0;
                 this.pauseStartTime = null;
-                
-                // Update display immediately
                 document.getElementById('timer').textContent = '00:00';
                 
-                // Start the timer interval
                 this.timerInterval = setInterval(() => {
                     if (!this.isPaused) {
                         this.elapsedTime = Date.now() - this.startTime;
                         document.getElementById('timer').textContent = this.formatTime(this.elapsedTime);
                     }
-                }, 100); // Update every 100ms for smoother display
+                }, 100);
             }
 
             stopTimer() {
@@ -1048,7 +1055,6 @@
             }
 
             togglePause() {
-                // Add vibration effect
                 if (navigator.vibrate) {
                     navigator.vibrate(100);
                 }
@@ -1060,12 +1066,10 @@
                 if (this.isPaused) {
                     pauseBtn.textContent = '▶️ Resume';
                     overlay.style.display = 'flex';
-                    // Store the pause start time
                     this.pauseStartTime = Date.now();
                 } else {
                     pauseBtn.textContent = '⏸️ Pause';
                     overlay.style.display = 'none';
-                    // Adjust start time to account for pause duration
                     if (this.pauseStartTime) {
                         const pauseDuration = Date.now() - this.pauseStartTime;
                         this.startTime += pauseDuration;
@@ -1080,37 +1084,28 @@
             }
 
             restart() {
-                // Add vibration effect
                 if (navigator.vibrate) {
                     navigator.vibrate([100, 50, 100]);
                 }
                 
-                // Stop timer first
                 this.stopTimer();
-                
-                // Reset all timer-related variables
                 this.elapsedTime = 0;
                 this.startTime = null;
                 this.isPaused = false;
                 this.hintsUsed = 0;
                 this.currentHintIndex = 0;
                 this.pauseStartTime = null;
-                this.gameStarted = false; // Reset game started flag
+                this.gameStarted = false;
                 
-                // Reset UI
                 document.getElementById('hintsLeft').textContent = `Hints: ${this.maxHints}`;
                 document.getElementById('pauseBtn').textContent = '⏸️ Pause';
                 document.getElementById('pauseOverlay').style.display = 'none';
                 document.getElementById('timer').textContent = '00:00';
                 
-                // Restore original grid (same puzzle)
                 this.grid = JSON.parse(JSON.stringify(this.originalGrid));
                 this.currentGrid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
                 
-                // Re-render the same grid
                 this.renderGrid();
-                
-                // Don't start timer - wait for first move
             }
 
             updateStatistics() {
@@ -1135,19 +1130,15 @@
             }
         }
 
-        // Game instance
         let game;
 
-        // Initialize game when page loads
         window.addEventListener('DOMContentLoaded', function() {
-            // Start the loading sequence immediately
             setTimeout(() => {
                 document.getElementById('loadingScreen').style.display = 'none';
-                document.getElementById('titleScreen').style.display = 'block';
-            }, 3000); // 3 seconds as requested
+                document.getElementById('titleScreen').style.display = 'flex';
+            }, 3000);
         });
 
-        // Add vibration to all buttons
         function addVibrationToButtons() {
             document.querySelectorAll('button').forEach(button => {
                 button.addEventListener('click', () => {
@@ -1158,73 +1149,96 @@
             });
         }
 
-        // Navigation functions
-        function showMenu() {
-            document.querySelectorAll('.container > .content > div').forEach(div => {
-                div.style.display = 'none';
+        function showPageTransition(callback) {
+            const transition = document.getElementById('pageTransition');
+            transition.style.display = 'flex';
+            
+            setTimeout(() => {
+                transition.style.display = 'none';
+                if (callback) callback();
+            }, 1500);
+        }
+
+        function showMenuWithTransition() {
+            showPageTransition(() => {
+                document.querySelectorAll('.container > .content > div').forEach(div => {
+                    div.style.display = 'none';
+                });
+                document.getElementById('mainMenu').style.display = 'flex';
+                if (game) game.stopTimer();
+                addVibrationToButtons();
             });
-            document.getElementById('mainMenu').style.display = 'flex';
-            if (game) game.stopTimer();
-            addVibrationToButtons();
+        }
+
+        function showMenuBack() {
+            showPageTransition(() => {
+                document.querySelectorAll('.container > .content > div').forEach(div => {
+                    div.style.display = 'none';
+                });
+                document.getElementById('mainMenu').style.display = 'flex';
+                if (game) game.stopTimer();
+                addVibrationToButtons();
+            });
         }
 
         function startGame() {
-            document.getElementById('mainMenu').style.display = 'none';
-            document.getElementById('gameScreen').style.display = 'block';
-            
-            // Create completely new game instance
-            game = new HitoriGame();
-            game.generatePuzzle();
-            
-            // Don't start timer - wait for first move
-            // Timer will start when player clicks first cell
-            
-            addVibrationToButtons();
+            showPageTransition(() => {
+                document.getElementById('mainMenu').style.display = 'none';
+                document.getElementById('gameScreen').style.display = 'block';
+                
+                game = new HitoriGame();
+                game.generatePuzzle();
+                
+                addVibrationToButtons();
+            });
         }
 
         function nextGameFromModal() {
-            // Close the modal and start a new game
             document.getElementById('feedbackModal').style.display = 'none';
             
-            // Create completely new game instance with different puzzle
-            game = new HitoriGame();
-            game.generatePuzzle();
-            
-            // Don't start timer - wait for first move
-            
-            addVibrationToButtons();
+            showPageTransition(() => {
+                game = new HitoriGame();
+                game.generatePuzzle();
+                
+                addVibrationToButtons();
+            });
         }
 
         function nextGame() {
-            document.getElementById('victoryScreen').style.display = 'none';
-            document.getElementById('gameScreen').style.display = 'block';
-            
-            // Create completely new game instance
-            game = new HitoriGame();
-            game.generatePuzzle();
-            
-            // Don't start timer - wait for first move
-            
-            addVibrationToButtons();
+            showPageTransition(() => {
+                document.getElementById('victoryScreen').style.display = 'none';
+                document.getElementById('gameScreen').style.display = 'block';
+                
+                game = new HitoriGame();
+                game.generatePuzzle();
+                
+                addVibrationToButtons();
+            });
         }
 
         function showHowToPlay() {
-            document.getElementById('mainMenu').style.display = 'none';
-            document.getElementById('howToPlayScreen').style.display = 'block';
-            addVibrationToButtons();
+            showPageTransition(() => {
+                document.getElementById('mainMenu').style.display = 'none';
+                document.getElementById('howToPlayScreen').style.display = 'block';
+                addVibrationToButtons();
+            });
         }
 
         function showAboutGame() {
-            document.getElementById('mainMenu').style.display = 'none';
-            document.getElementById('aboutGameScreen').style.display = 'block';
-            addVibrationToButtons();
+            showPageTransition(() => {
+                document.getElementById('mainMenu').style.display = 'none';
+                document.getElementById('aboutGameScreen').style.display = 'block';
+                addVibrationToButtons();
+            });
         }
 
         function showStatistics() {
-            document.getElementById('mainMenu').style.display = 'none';
-            document.getElementById('statisticsScreen').style.display = 'block';
-            if (game) game.loadStatistics();
-            addVibrationToButtons();
+            showPageTransition(() => {
+                document.getElementById('mainMenu').style.display = 'none';
+                document.getElementById('statisticsScreen').style.display = 'block';
+                if (game) game.loadStatistics();
+                addVibrationToButtons();
+            });
         }
 
         function restartGame() {
@@ -1247,7 +1261,6 @@
             if (game) game.closeFeedback();
         }
 
-        // Initialize vibration when page loads
         document.addEventListener('DOMContentLoaded', addVibrationToButtons);
     </script>
 </body>
