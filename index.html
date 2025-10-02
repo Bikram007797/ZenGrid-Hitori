@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zen Puzzle Master</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, rgba(222, 184, 135, 0.9) 0%, rgba(205, 164, 116, 0.9) 100%), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23DEB887" width="100" height="100"/></svg>');
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(139, 102, 79, 0.1);
+            z-index: -2;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.2; }
+        }
+
+        .zen-element {
+            position: fixed;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+            z-index: -1;
+            pointer-events: none;
+            font-size: 2rem;
+        }
+
+        .zen-element:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .zen-element:nth-child(2) {
+            top: 20%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .zen-element:nth-child(3) {
+            bottom: 15%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .container {
+            background: rgba(245, 231, 201, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(139, 102, 79, 0.3);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.8s ease-out;
+            border: 2px solid rgba(139, 102, 79, 0.2);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(205, 164, 116, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 4s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .loading-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #e3e3e3;
+            border-top: 4px solid #8B6F47;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .title-screen {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .japanese-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 3rem;
+            animation: titleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .main-title {
+            font-family: "Cinzel Decorative", "Papyrus", serif;
+            font-size: 4.5rem;
+            color: #8B6F47;
+            text-shadow: 3px 3px 6px rgba(139, 111, 71, 0.4),
+                         -1px -1px 0 rgba(255, 255, 255, 0.7),
+                         1px 1px 2px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.25em;
+            font-weight: 700;
+            transform: scale(1, 1.2);
+            -webkit-text-stroke: 1px rgba(139, 111, 71, 0.3);
+        }
+
+        .sub-title {
+            font-family: "Cinzel", serif;
+            font-size: 2.8rem;
+            color: #A0845C;
+            margin-bottom: 1rem;
+            letter-spacing: 0.4em;
+            font-weight: 400;
+            transform: scale(1, 1.1);
+            text-shadow: 2px 2px 4px rgba(139, 111, 71, 0.3);
+        }
+
+        .title-line {
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent,
+                #8B6F47,
+                #A0845C,
+                #8B6F47,
+                transparent
+            );
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .title-line::before,
+        .title-line::after {
+            content: '✦';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8B6F47;
+            font-size: 1rem;
+        }
+
+        .title-line::before {
+            left: -20px;
+        }
+
+        .title-line::after {
+            right: -20px;
+        }
+
+        .developer-name {
+            font-family: "Cinzel", serif;
+            font-size: 1.3rem;
+            color: #8B6F47;
+            letter-spacing: 0.3em;
+            opacity: 0.9;
+            margin-top: 1rem;
+            font-weight: 400;
+            text-shadow: 1px 1px 2px rgba(139, 111, 71, 0.2);
+        }
+
+        .zen-btn {
+            font-family: "Yu Mincho", "MS Mincho", serif;
+            letter-spacing: 0.2em;
+            transform: scale(1, 1.05);
+            transition: all 0.3s ease;
+        }
+
+        .zen-btn:hover {
+            transform: translateY(-2px) scale(1, 1.05);
+        }
+
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(222, 184, 135, 0.98) 0%, rgba(205, 164, 116, 0.98) 100%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeInOut 1.5s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .transition-title {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 3.5rem;
+            color: #8B6F47;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(139, 111, 71, 0.4);
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+            animation: slideInTitle 1s ease-out;
+            text-align: center;
+        }
+
+        @keyframes slideInTitle {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .transition-developer {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1.2rem;
+            color: rgba(139, 111, 71, 0.8);
+            font-style: italic;
+            animation: slideInDev 1s ease-out 0.3s backwards;
+        }
+
+        @keyframes slideInDev {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .menu {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .menu-btn, .control-btn, .submit-btn, .back-btn, .resume-btn {
+            background: linear-gradient(135deg, #8B6F47, #A0845C);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 111, 71, 0.3);
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .menu-btn:hover, .control-btn:hover, .submit-btn:hover, .back-btn:hover, .resume-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 111, 71, 0.4);
+            background: linear-gradient(135deg, #A0845C, #8B6F47);
+        }
+
+        .menu-btn:active, .control-btn:active, .submit-btn:active, .back-btn:active, .resume-btn:active {
+            transform: translateY(0) scale(0.98);
+            animation: vibrate 0.3s ease-in-out;
+        }
+
+        @keyframes vibrate {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+        }
+
+        .game-screen {
+            display: none;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .timer, .hints-left {
+            background: linear-gradient(135deg, #8B6F47, #A0845C);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(139, 111, 71, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(139, 111, 71, 0.6); }
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: rgba(139, 111, 71, 0.1);
+            border: 2px solid #8B6F47;
+            color: #8B6F47;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #8B6F47;
+            color: white;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            padding: 1rem 2rem;
+            animation: submitPulse 2s infinite;
+        }
+
+        @keyframes submitPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.6); }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+            background: #ddd;
+            padding: 2px;
+            border-radius: 10px;
+            margin: 1rem auto;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            position: relative;
+            border-radius: 4px;
+        }
+
+        .cell:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        .cell:active {
+            animation: cellVibrate 0.2s ease-in-out;
+        }
+
+        @keyframes cellVibrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+        }
+
+        .cell.shaded {
+            background: #333;
+            color: white;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .cell.highlighted {
+            background: #F5E7CD;
+            animation: hintPulse 2s ease-in-out;
+            box-shadow: 0 0 15px rgba(205, 164, 116, 0.8);
+        }
+
+        @keyframes hintPulse {
+            0%, 100% { transform: scale(1); background: #F5E7CD; }
+            50% { transform: scale(1.1); background: #E6D3A3; }
+        }
+
+        .cell.error {
+            background: #ff5252 !important;
+            color: white !important;
+            animation: errorShake 0.5s ease-in-out;
+            box-shadow: 0 0 15px rgba(255, 82, 82, 0.8) !important;
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
+        .feedback-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .feedback-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .how-to-play, .about-game, .statistics {
+            display: none;
+            text-align: left;
+        }
+
+        .how-to-play h2, .about-game h2, .statistics h2 {
+            color: #8B6F47;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .rule, .about-section, .stat-item {
+            background: rgba(139, 111, 71, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #8B6F47;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .victory-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .victory-screen h2 {
+            color: #4caf50;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            animation: victoryBounce 1s ease-in-out;
+        }
+
+        @keyframes victoryBounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .paused-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(139, 102, 79, 0.8);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            border-radius: 20px;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .resume-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            margin-top: 2rem;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 1rem; }
+            .transition-title { font-size: 2.5rem; }
+            .grid { max-width: 300px; }
+            .cell { font-size: 1rem; }
+            .game-header { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zen-element">🕸️</div>
+    <div class="zen-element">🌸</div>
+    <div class="zen-element">🍃</div>
+    
+    <div class="page-transition" id="pageTransition">
+        <div class="transition-title">ZenGrid Hitori</div>
+        <div class="transition-developer">Developed by Bikram</div>
+    </div>
+    
+    <div class="container">
+        <div class="paused-overlay" id="pauseOverlay">
+            <div>⏸️ GAME PAUSED</div>
+            <div style="font-size: 1rem; margin-top: 1rem;">Click Resume to continue</div>
+            <button class="resume-btn" onclick="togglePause()">▶️ Resume Game</button>
+        </div>
+        
+        <div class="content">
+            <div class="loading-screen" id="loadingScreen">
+                <div class="loader"></div>
+                <h2>Loading ZenGrid Hitori...</h2>
+                <p>Preparing your zen puzzle experience</p>
+            </div>
+
+            <div class="title-screen" id="titleScreen">
+                <div class="japanese-title">
+                    <div class="main-title">ZENGRID</div>
+                    <div class="sub-title">HITORI</div>
+                    <div class="title-line"></div>
+                    <div class="developer-name">BY BIKRAM</div>
+                </div>
+                <button class="menu-btn zen-btn" onclick="showMenuWithTransition()">🎋 ENTER</button>
+            </div>
+
+            <div class="menu" id="mainMenu">
+                <h2 style="color: #8B6F47; margin-bottom: 1rem;">Main Menu</h2>
+                <button class="menu-btn" onclick="startGame()">🎯 Start Game</button>
+                <button class="menu-btn" onclick="showHowToPlay()">📚 How to Play</button>
+                <button class="menu-btn" onclick="showAboutGame()">🎌 About Hitori</button>
+                <button class="menu-btn" onclick="showStatistics()">📊 Statistics</button>
+            </div>
+
+            <div class="game-screen" id="gameScreen">
+                <div class="game-header">
+                    <div class="game-info">
+                        <div class="timer" id="timer">00:00</div>
+                        <div class="hints-left" id="hintsLeft">Hints: 3</div>
+                    </div>
+                    <div class="game-controls">
+                        <button class="control-btn" onclick="togglePause()" id="pauseBtn">⏸️ Pause</button>
+                        <button class="control-btn" onclick="getHint()">💡 Hint</button>
+                        <button class="control-btn" onclick="restartGame()">🔄 Restart</button>
+                        <button class="control-btn" onclick="showMenuBack()">🏠 Menu</button>
+                    </div>
+                </div>
+                <div class="grid" id="gameGrid"></div>
+                <button class="submit-btn" onclick="submitSolution()">✅ Submit Solution</button>
+            </div>
+
+            <div class="feedback-modal" id="feedbackModal">
+                <div class="feedback-content">
+                    <h3 id="feedbackTitle">Game Status</h3>
+                    <div id="feedbackMessage"></div>
+                    <div style="margin-top: 1rem;">
+                        <button class="menu-btn" onclick="closeFeedback()" style="margin: 0.5rem;">OK</button>
+                        <button class="menu-btn" onclick="nextGameFromModal()" style="margin: 0.5rem; background: linear-gradient(135deg, #4caf50, #45a049);">▶️ Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="how-to-play" id="howToPlayScreen">
+                <h2>How to Play Hitori</h2>
+                <div class="rule">
+                    <h3>🎯 Objective</h3>
+                    <p>Shade some cells so that no number appears more than once in any row or column.</p>
+                </div>
+                <div class="rule">
+                    <h3>📋 Rules</h3>
+                    <p><strong>1.</strong> Click cells to shade them black</p>
+                    <p><strong>2.</strong> No two shaded cells can be adjacent (horizontally or vertically)</p>
+                    <p><strong>3.</strong> All unshaded cells must remain connected</p>
+                    <p><strong>4.</strong> Each row and column can have each number only once (in unshaded cells)</p>
+                </div>
+                <div class="rule">
+                    <h3>💡 Tips</h3>
+                    <p>• Start with numbers that appear most frequently</p>
+                    <p>• Use the hint system when stuck (3 hints per game)</p>
+                    <p>• Think ahead - shading cells affects connectivity</p>
+                    <p>• Use the Submit button to check your progress</p>
+                </div>
+                <button class="back-btn" onclick="showMenuWithTransition()">Back to Menu</button>
+            </div>
+
+            <div class="about-game" id="aboutGameScreen">
+                <h2>About Hitori</h2>
+                <div class="about-section">
+                    <h3>🎌 What is Hitori?</h3>
+                    <p>Hitori (ひとり) is a Japanese logic puzzle game whose name literally means "alone" or "leave me alone". It's a number-based puzzle that challenges players to eliminate duplicates while maintaining specific constraints.</p>
+                </div>
+                <div class="about-section">
+                    <h3>📚 History</h3>
+                    <p>Hitori was created by the famous Japanese puzzle company Nikoli, the same company behind Sudoku and Kakuro. Nikoli was founded in 1980 by Maki Kaji, who is often called the "Godfather of Sudoku".</p>
+                </div>
+                <div class="about-section">
+                    <h3>🧘 The Zen Philosophy</h3>
+                    <p>Like many Japanese puzzles, Hitori embodies principles of minimalism and balance. The act of "leaving numbers alone" by shading them reflects the Zen concept of knowing when to act and when to refrain from action.</p>
+                </div>
+                <button class="back-btn" onclick="showMenuWithTransition()">Back to Menu</button>
+            </div>
+
+            <div class="statistics" id="statisticsScreen">
+                <h2>Statistics</h2>
+                <div class="stat-item">
+                    <span>Best Time</span>
+                    <span id="bestTime">--:--</span>
+                </div>
+                <div class="stat-item">
+                    <span>Games Completed</span>
+                    <span id="gamesCompleted">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Average Time</span>
+                    <span id="averageTime">--:--</span>
+                </div>
+                <button class="back-btn" onclick="showMenuWithTransition()">Back to Menu</button>
+            </div>
+
+            <div class="victory-screen" id="victoryScreen">
+                <h2>🎉 Congratulations!</h2>
+                <div style="font-size: 1.5rem; color: #8B6F47; margin-bottom: 1rem;" id="completionTime">Time: 00:00</div>
+                <p id="bestTimeMessage"></p>
+                <div style="margin-top: 2rem;">
+                    <button class="menu-btn" onclick="nextGame()" style="margin: 0.5rem;">▶️ Next Game</button>
+                    <button class="menu-btn" onclick="showMenuWithTransition()" style="margin: 0.5rem;">🏠 Main Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="victorySound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRvIGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEfCTyQ2e2TQAkOW7Lh5KZUG" type="audio/wav">
+    </audio>
+
+    <script>
+        class HitoriGame {
+            constructor() {
+                this.grid = [];
+                this.solution = [];
+                this.currentGrid = [];
+                this.gridSize = 8;
+                this.startTime = null;
+                this.elapsedTime = 0;
+                this.timerInterval = null;
+                this.isPaused = false;
+                this.hintsUsed = 0;
+                this.maxHints = 3;
+                this.currentHintIndex = 0;
+                this.availableHints = [];
+                this.originalGrid = [];
+                this.gameStarted = false;
+                
+                this.loadStatistics();
+            }
+
+            generatePuzzle() {
+                this.createRandomGrid();
+                this.addRandomDuplicates();
+                this.calculateSolution();
+                this.prepareHints();
+                this.originalGrid = JSON.parse(JSON.stringify(this.grid));
+                this.renderGrid();
+            }
+
+            createRandomGrid() {
+                this.grid = [];
+                for (let row = 0; row < this.gridSize; row++) {
+                    this.grid[row] = [];
+                    for (let col = 0; col < this.gridSize; col++) {
+                        let num;
+                        const pattern = Math.floor(Math.random() * 5);
+                        
+                        switch(pattern) {
+                            case 0:
+                                num = ((row + col) % this.gridSize) + 1;
+                                break;
+                            case 1:
+                                num = ((row - col + this.gridSize) % this.gridSize) + 1;
+                                break;
+                            case 2:
+                                num = ((row * 2 + col) % this.gridSize) + 1;
+                                break;
+                            case 3:
+                                num = ((row * 3 + col * 2) % this.gridSize) + 1;
+                                break;
+                            default:
+                                num = Math.floor(Math.random() * this.gridSize) + 1;
+                        }
+                        
+                        if (Math.random() < 0.4) {
+                            num = Math.floor(Math.random() * this.gridSize) + 1;
+                        }
+                        
+                        this.grid[row][col] = num;
+                    }
+                }
+            }
+
+            addRandomDuplicates() {
+                const numDuplicateGroups = 8 + Math.floor(Math.random() * 8);
+                
+                for (let i = 0; i < numDuplicateGroups; i++) {
+                    const createRowDuplicate = Math.random() < 0.5;
+                    
+                    if (createRowDuplicate) {
+                        const row = Math.floor(Math.random() * this.gridSize);
+                        const col1 = Math.floor(Math.random() * this.gridSize);
+                        const col2 = Math.floor(Math.random() * this.gridSize);
+                        
+                        if (col1 !== col2) {
+                            this.grid[row][col2] = this.grid[row][col1];
+                        }
+                    } else {
+                        const col = Math.floor(Math.random() * this.gridSize);
+                        const row1 = Math.floor(Math.random() * this.gridSize);
+                        const row2 = Math.floor(Math.random() * this.gridSize);
+                        
+                        if (row1 !== row2) {
+                            this.grid[row2][col] = this.grid[row1][col];
+                        }
+                    }
+                }
+            }
+
+            calculateSolution() {
+                this.solution = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
+                
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        if (this.shouldBeShaded(row, col)) {
+                            this.solution[row][col] = true;
+                        }
+                    }
+                }
+            }
+
+            shouldBeShaded(row, col) {
+                const currentNum = this.grid[row][col];
+                
+                let firstInRow = -1;
+                for (let c = 0; c < this.gridSize; c++) {
+                    if (this.grid[row][c] === currentNum) {
+                        firstInRow = c;
+                        break;
+                    }
+                }
+                
+                let firstInCol = -1;
+                for (let r = 0; r < this.gridSize; r++) {
+                    if (this.grid[r][col] === currentNum) {
+                        firstInCol = r;
+                        break;
+                    }
+                }
+                
+                let shouldShade = false;
+                
+                if (firstInRow !== col) {
+                    for (let c = 0; c < this.gridSize; c++) {
+                        if (c !== col && this.grid[row][c] === currentNum) {
+                            shouldShade = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (firstInCol !== row) {
+                    for (let r = 0; r < this.gridSize; r++) {
+                        if (r !== row && this.grid[r][col] === currentNum) {
+                            shouldShade = true;
+                            break;
+                        }
+                    }
+                }
+                
+                return shouldShade && (col > firstInRow || row > firstInCol);
+            }
+
+            prepareHints() {
+                this.availableHints = [];
+                this.currentHintIndex = 0;
+                
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        if (this.solution[row][col]) {
+                            this.availableHints.push([row, col]);
+                        }
+                    }
+                }
+                
+                this.shuffleArray(this.availableHints);
+            }
+
+            shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+
+            renderGrid() {
+                const gridElement = document.getElementById('gameGrid');
+                gridElement.innerHTML = '';
+                
+                this.currentGrid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
+                
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+                        cell.textContent = this.grid[row][col];
+                        cell.onclick = () => this.toggleCell(row, col);
+                        cell.id = `cell-${row}-${col}`;
+                        gridElement.appendChild(cell);
+                    }
+                }
+            }
+
+            toggleCell(row, col) {
+                if (this.isPaused) return;
+                
+                if (!this.gameStarted) {
+                    this.gameStarted = true;
+                    this.startTimer();
+                }
+                
+                if (navigator.vibrate) {
+                    navigator.vibrate(30);
+                }
+                
+                this.currentGrid[row][col] = !this.currentGrid[row][col];
+                const cell = document.getElementById(`cell-${row}-${col}`);
+                
+                cell.classList.remove('error');
+                
+                if (this.currentGrid[row][col]) {
+                    cell.classList.add('shaded');
+                } else {
+                    cell.classList.remove('shaded');
+                }
+            }
+
+            getHint() {
+                if (this.hintsUsed >= this.maxHints || this.isPaused) return;
+                
+                if (navigator.vibrate) {
+                    navigator.vibrate([50, 30, 50, 30, 50]);
+                }
+                
+                this.hintsUsed++;
+                document.getElementById('hintsLeft').textContent = `Hints: ${this.maxHints - this.hintsUsed}`;
+                
+                let hintFound = false;
+                let attempts = 0;
+                
+                while (!hintFound && attempts < this.availableHints.length) {
+                    if (this.currentHintIndex >= this.availableHints.length) {
+                        this.currentHintIndex = 0;
+                    }
+                    
+                    const [row, col] = this.availableHints[this.currentHintIndex];
+                    
+                    if (this.solution[row][col] && !this.currentGrid[row][col]) {
+                        const cell = document.getElementById(`cell-${row}-${col}`);
+                        cell.classList.add('highlighted');
+                        setTimeout(() => {
+                            cell.classList.remove('highlighted');
+                        }, 3000);
+                        hintFound = true;
+                    }
+                    
+                    this.currentHintIndex++;
+                    attempts++;
+                }
+            }
+
+            submitSolution() {
+                if (this.isPaused) return;
+                
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 100]);
+                }
+                
+                this.clearErrorHighlights();
+                
+                let shadedCount = 0;
+                let totalSolutionCells = 0;
+                
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        if (this.solution[row][col]) {
+                            totalSolutionCells++;
+                        }
+                        if (this.currentGrid[row][col]) {
+                            shadedCount++;
+                        }
+                    }
+                }
+                
+                const wrongCells = this.findWrongCells();
+                const hasErrors = wrongCells.length > 0;
+                
+                if (shadedCount === 0) {
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200]);
+                    }
+                    this.showFeedback("🤔 You haven't filled a single cell yet!", "Start by clicking cells to shade them and eliminate duplicate numbers.");
+                }
+                else if (shadedCount < totalSolutionCells && !hasErrors) {
+                    if (navigator.vibrate) {
+                        navigator.vibrate([50, 50, 50]);
+                    }
+                    this.showFeedback("👍 Getting better, keep going!", `You have ${shadedCount}/${totalSolutionCells} correct cells shaded. Continue finding the remaining duplicates!`);
+                }
+                else if (shadedCount < totalSolutionCells && hasErrors) {
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200, 100, 200]);
+                    }
+                    this.highlightWrongCells(wrongCells);
+                    this.showFeedback("😬 Oops, you made mistakes!", `You have ${wrongCells.length} incorrect cell(s). They are highlighted in red. Fix them and try again!`);
+                }
+                else if (shadedCount === totalSolutionCells && !hasErrors) {
+                    const victorySound = document.getElementById('victorySound');
+                    victorySound.play().catch(e => console.log('Sound not available'));
+                    
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200, 100, 400]);
+                    }
+                    this.showFeedback("🎉 Congratulations, you did it! 🏆", `Perfect solution! You completed it in ${this.formatTime(this.elapsedTime)}.`);
+                    this.handleVictory();
+                }
+                else if (hasErrors) {
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200, 100, 200, 100, 200]);
+                    }
+                    this.highlightWrongCells(wrongCells);
+                    this.showFeedback("😬 Oops, you made mistakes!", `You have ${wrongCells.length} incorrect cell(s). They are highlighted in red. Fix them and try again!`);
+                }
+            }
+
+            findWrongCells() {
+                const wrongCells = [];
+                
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        if (this.solution[row][col] && !this.currentGrid[row][col]) {
+                            wrongCells.push([row, col, 'missing']);
+                        }
+                        else if (!this.solution[row][col] && this.currentGrid[row][col]) {
+                            wrongCells.push([row, col, 'extra']);
+                        }
+                    }
+                }
+                
+                return wrongCells;
+            }
+
+            highlightWrongCells(wrongCells) {
+                wrongCells.forEach(([row, col]) => {
+                    const cell = document.getElementById(`cell-${row}-${col}`);
+                    if (cell) {
+                        cell.classList.add('error');
+                    }
+                });
+                
+                setTimeout(() => {
+                    this.clearErrorHighlights();
+                }, 3000);
+            }
+
+            clearErrorHighlights() {
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        const cell = document.getElementById(`cell-${row}-${col}`);
+                        if (cell) {
+                            cell.classList.remove('error');
+                        }
+                    }
+                }
+            }
+
+            showFeedback(title, message) {
+                const modal = document.getElementById('feedbackModal');
+                const titleElement = document.getElementById('feedbackTitle');
+                const messageElement = document.getElementById('feedbackMessage');
+                
+                titleElement.textContent = title;
+                messageElement.textContent = message;
+                
+                modal.style.display = 'flex';
+            }
+
+            closeFeedback() {
+                document.getElementById('feedbackModal').style.display = 'none';
+            }
+
+            handleVictory() {
+                this.stopTimer();
+                this.updateStatistics();
+                
+                document.getElementById('gameScreen').style.display = 'none';
+                document.getElementById('victoryScreen').style.display = 'block';
+                document.getElementById('completionTime').textContent = `Time: ${this.formatTime(this.elapsedTime)}`;
+                
+                const bestTime = localStorage.getItem('hitorieBestTime');
+                if (!bestTime || this.elapsedTime < parseInt(bestTime)) {
+                    localStorage.setItem('hitorieBestTime', this.elapsedTime.toString());
+                    document.getElementById('bestTimeMessage').textContent = '🎉 New Best Time!';
+                } else {
+                    document.getElementById('bestTimeMessage').textContent = `Best: ${this.formatTime(parseInt(bestTime))}`;
+                }
+            }
+
+            startTimer() {
+                this.stopTimer();
+                this.startTime = Date.now();
+                this.elapsedTime = 0;
+                this.pauseStartTime = null;
+                document.getElementById('timer').textContent = '00:00';
+                
+                this.timerInterval = setInterval(() => {
+                    if (!this.isPaused) {
+                        this.elapsedTime = Date.now() - this.startTime;
+                        document.getElementById('timer').textContent = this.formatTime(this.elapsedTime);
+                    }
+                }, 100);
+            }
+
+            stopTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+            }
+
+            togglePause() {
+                if (navigator.vibrate) {
+                    navigator.vibrate([80, 40, 80]);
+                }
+                
+                this.isPaused = !this.isPaused;
+                const pauseBtn = document.getElementById('pauseBtn');
+                const overlay = document.getElementById('pauseOverlay');
+                
+                if (this.isPaused) {
+                    pauseBtn.textContent = '▶️ Resume';
+                    overlay.style.display = 'flex';
+                    this.pauseStartTime = Date.now();
+                } else {
+                    pauseBtn.textContent = '⏸️ Pause';
+                    overlay.style.display = 'none';
+                    if (this.pauseStartTime) {
+                        const pauseDuration = Date.now() - this.pauseStartTime;
+                        this.startTime += pauseDuration;
+                    }
+                }
+            }
+
+            formatTime(ms) {
+                const seconds = Math.floor(ms / 1000);
+                const minutes = Math.floor(seconds / 60);
+                return `${minutes.toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
+            }
+
+            restart() {
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 100, 50, 100]);
+                }
+                
+                this.stopTimer();
+                this.elapsedTime = 0;
+                this.startTime = null;
+                this.isPaused = false;
+                this.hintsUsed = 0;
+                this.currentHintIndex = 0;
+                this.pauseStartTime = null;
+                this.gameStarted = false;
+                
+                document.getElementById('hintsLeft').textContent = `Hints: ${this.maxHints}`;
+                document.getElementById('pauseBtn').textContent = '⏸️ Pause';
+                document.getElementById('pauseOverlay').style.display = 'none';
+                document.getElementById('timer').textContent = '00:00';
+                
+                this.grid = JSON.parse(JSON.stringify(this.originalGrid));
+                this.currentGrid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
+                
+                this.clearErrorHighlights();
+                this.renderGrid();
+            }
+
+            updateStatistics() {
+                let gamesCompleted = parseInt(localStorage.getItem('hitoreGamesCompleted') || '0') + 1;
+                let totalTime = parseInt(localStorage.getItem('hitoreTotalTime') || '0') + this.elapsedTime;
+                
+                localStorage.setItem('hitoreGamesCompleted', gamesCompleted.toString());
+                localStorage.setItem('hitoreTotalTime', totalTime.toString());
+            }
+
+            loadStatistics() {
+                const bestTime = localStorage.getItem('hitorieBestTime');
+                const gamesCompleted = localStorage.getItem('hitoreGamesCompleted') || '0';
+                const totalTime = parseInt(localStorage.getItem('hitoreTotalTime') || '0');
+                
+                if (document.getElementById('bestTime')) {
+                    document.getElementById('bestTime').textContent = bestTime ? this.formatTime(parseInt(bestTime)) : '--:--';
+                    document.getElementById('gamesCompleted').textContent = gamesCompleted;
+                    document.getElementById('averageTime').textContent = gamesCompleted > 0 ? 
+                        this.formatTime(Math.floor(totalTime / parseInt(gamesCompleted))) : '--:--';
+                }
+            }
+        }
+
+        let game;
+
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('titleScreen').style.display = 'flex';
+            }, 3000);
+        });
+
+        function addVibrationToButtons() {
+            document.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', () => {
+                    if (navigator.vibrate) {
+                        navigator.vibrate(50);
+                    }
+                });
+            });
+        }
+
+        function showPageTransition(callback) {
+            const transition = document.getElementById('pageTransition');
+            transition.style.display = 'flex';
+            
+            setTimeout(() => {
+                transition.style.display = 'none';
+                if (callback) callback();
+            }, 1500);
+        }
+
+        function showMenuWithTransition() {
+            showPageTransition(() => {
+                document.querySelectorAll('.container > .content > div').forEach(div => {
+                    div.style.display = 'none';
+                });
+                document.getElementById('mainMenu').style.display = 'flex';
+                if (game) game.stopTimer();
+                addVibrationToButtons();
+            });
+        }
+
+        function showMenuBack() {
+            showPageTransition(() => {
+                document.querySelectorAll('.container > .content > div').forEach(div => {
+                    div.style.display = 'none';
+                });
+                document.getElementById('mainMenu').style.display = 'flex';
+                if (game) game.stopTimer();
+                addVibrationToButtons();
+            });
+        }
+
+        function startGame() {
+            showPageTransition(() => {
+                document.getElementById('mainMenu').style.display = 'none';
+                document.getElementById('gameScreen').style.display = 'block';
+                
+                game = new HitoriGame();
+                game.generatePuzzle();
+                
+                addVibrationToButtons();
+            });
+        }
+
+        function nextGameFromModal() {
+            document.getElementById('feedbackModal').style.display = 'none';
+            
+            showPageTransition(() => {
+                game = new HitoriGame();
+                game.generatePuzzle();
+                
+                addVibrationToButtons();
+            });
+        }
+
+        function nextGame() {
+            showPageTransition(() => {
+                document.getElementById('victoryScreen').style.display = 'none';
+                document.getElementById('gameScreen').style.display = 'block';
+                
+                game = new HitoriGame();
+                game.generatePuzzle();
+                
+                addVibrationToButtons();
+            });
+        }
+
+        function showHowToPlay() {
+            showPageTransition(() => {
+                document.getElementById('mainMenu').style.display = 'none';
+                document.getElementById('howToPlayScreen').style.display = 'block';
+                addVibrationToButtons();
+            });
+        }
+
+        function showAboutGame() {
+            showPageTransition(() => {
+                document.getElementById('mainMenu').style.display = 'none';
+                document.getElementById('aboutGameScreen').style.display = 'block';
+                addVibrationToButtons();
+            });
+        }
+
+        function showStatistics() {
+            showPageTransition(() => {
+                document.getElementById('mainMenu').style.display = 'none';
+                document.getElementById('statisticsScreen').style.display = 'block';
+                if (game) game.loadStatistics();
+                addVibrationToButtons();
+            });
+        }
+
+        function restartGame() {
+            if (game) game.restart();
+        }
+
+        function getHint() {
+            if (game) game.getHint();
+        }
+
+        function togglePause() {
+            if (game) game.togglePause();
+        }
+
+        function submitSolution() {
+            if (game) game.submitSolution();
+        }
+
+        function closeFeedback() {
+            if (game) game.closeFeedback();
+        }
+
+        document.addEventListener('DOMContentLoaded', addVibrationToButtons);
+    </script>
+</body>
+</html>
