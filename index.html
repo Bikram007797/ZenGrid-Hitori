@@ -116,7 +116,6 @@
             z-index: 2;
         }
 
-        /* Loading Screen */
         .loading-screen {
             display: flex;
             flex-direction: column;
@@ -140,7 +139,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Title Screen */
         .title-screen {
             display: none;
             flex-direction: column;
@@ -164,7 +162,6 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* Page Transition */
         .page-transition {
             position: fixed;
             top: 0;
@@ -216,7 +213,6 @@
             100% { transform: translateY(0); opacity: 1; }
         }
 
-        /* Menu and Buttons */
         .menu {
             display: none;
             flex-direction: column;
@@ -255,7 +251,6 @@
             75% { transform: translateX(2px); }
         }
 
-        /* Game Screen */
         .game-screen {
             display: none;
         }
@@ -382,7 +377,20 @@
             50% { transform: scale(1.1); background: #E6D3A3; }
         }
 
-        /* Feedback Modal */
+        .cell.error {
+            background: #ff5252 !important;
+            color: white !important;
+            animation: errorShake 0.5s ease-in-out;
+            box-shadow: 0 0 15px rgba(255, 82, 82, 0.8) !important;
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
         .feedback-modal {
             position: fixed;
             top: 0;
@@ -417,20 +425,6 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        .error-list {
-            text-align: left;
-            margin: 1rem 0;
-            padding: 1rem;
-            background: #f5f5f5;
-            border-radius: 10px;
-        }
-
-        .error-item {
-            color: #d32f2f;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Other screens */
         .how-to-play, .about-game, .statistics {
             display: none;
             text-align: left;
@@ -509,19 +503,16 @@
     </style>
 </head>
 <body>
-    <!-- Zen floating elements -->
     <div class="zen-element">🕸️</div>
     <div class="zen-element">🌸</div>
     <div class="zen-element">🍃</div>
     
-    <!-- Page Transition Animation -->
     <div class="page-transition" id="pageTransition">
         <div class="transition-title">ZenGrid Hitori</div>
         <div class="transition-developer">Developed by Bikram</div>
     </div>
     
     <div class="container">
-        <!-- Pause Overlay with Resume Button -->
         <div class="paused-overlay" id="pauseOverlay">
             <div>⏸️ GAME PAUSED</div>
             <div style="font-size: 1rem; margin-top: 1rem;">Click Resume to continue</div>
@@ -529,22 +520,17 @@
         </div>
         
         <div class="content">
-            <!-- Loading Screen -->
             <div class="loading-screen" id="loadingScreen">
                 <div class="loader"></div>
                 <h2>Loading ZenGrid Hitori...</h2>
                 <p>Preparing your zen puzzle experience</p>
-                <p>This game developed by BIKRAM</p>
             </div>
 
-            <!-- Title Screen with Entry Image -->
             <div class="title-screen" id="titleScreen">
-               <h1>ZenGrid Hitori</h1>
-               <div class="developer-credit">Developed by Bikram</div>
-               <button class="menu-btn" onclick="showMenuWithTransition()">🎋 Enter Game</button>
+                <img src="https://i.postimg.cc/T3BvDBkM/image.png" alt="ZenGrid Hitori" class="entry-image">
+                <button class="menu-btn" onclick="showMenuWithTransition()">🎋 Enter Game</button>
             </div>
 
-            <!-- Main Menu -->
             <div class="menu" id="mainMenu">
                 <h2 style="color: #8B6F47; margin-bottom: 1rem;">Main Menu</h2>
                 <button class="menu-btn" onclick="startGame()">🎯 Start Game</button>
@@ -553,7 +539,6 @@
                 <button class="menu-btn" onclick="showStatistics()">📊 Statistics</button>
             </div>
 
-            <!-- Game Screen -->
             <div class="game-screen" id="gameScreen">
                 <div class="game-header">
                     <div class="game-info">
@@ -571,12 +556,10 @@
                 <button class="submit-btn" onclick="submitSolution()">✅ Submit Solution</button>
             </div>
 
-            <!-- Feedback Modal -->
             <div class="feedback-modal" id="feedbackModal">
                 <div class="feedback-content">
                     <h3 id="feedbackTitle">Game Status</h3>
                     <div id="feedbackMessage"></div>
-                    <div id="errorsList" class="error-list" style="display: none;"></div>
                     <div style="margin-top: 1rem;">
                         <button class="menu-btn" onclick="closeFeedback()" style="margin: 0.5rem;">OK</button>
                         <button class="menu-btn" onclick="nextGameFromModal()" style="margin: 0.5rem; background: linear-gradient(135deg, #4caf50, #45a049);">▶️ Next</button>
@@ -584,7 +567,6 @@
                 </div>
             </div>
 
-            <!-- How to Play Screen -->
             <div class="how-to-play" id="howToPlayScreen">
                 <h2>How to Play Hitori</h2>
                 <div class="rule">
@@ -608,7 +590,6 @@
                 <button class="back-btn" onclick="showMenuWithTransition()">Back to Menu</button>
             </div>
 
-            <!-- About Hitori Screen -->
             <div class="about-game" id="aboutGameScreen">
                 <h2>About Hitori</h2>
                 <div class="about-section">
@@ -626,7 +607,6 @@
                 <button class="back-btn" onclick="showMenuWithTransition()">Back to Menu</button>
             </div>
 
-            <!-- Statistics Screen -->
             <div class="statistics" id="statisticsScreen">
                 <h2>Statistics</h2>
                 <div class="stat-item">
@@ -644,10 +624,9 @@
                 <button class="back-btn" onclick="showMenuWithTransition()">Back to Menu</button>
             </div>
 
-            <!-- Victory Screen -->
             <div class="victory-screen" id="victoryScreen">
                 <h2>🎉 Congratulations!</h2>
-                <div class="time-display" id="completionTime" style="font-size: 1.5rem; color: #8B6F47; margin-bottom: 1rem;">Time: 00:00</div>
+                <div style="font-size: 1.5rem; color: #8B6F47; margin-bottom: 1rem;" id="completionTime">Time: 00:00</div>
                 <p id="bestTimeMessage"></p>
                 <div style="margin-top: 2rem;">
                     <button class="menu-btn" onclick="nextGame()" style="margin: 0.5rem;">▶️ Next Game</button>
@@ -657,7 +636,6 @@
         </div>
     </div>
 
-    <!-- Audio elements for sound effects -->
     <audio id="victorySound" preload="auto">
         <source src="data:audio/wav;base64,UklGRvIGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEfCTyQ2e2TQAkOW7Lh5KZUG" type="audio/wav">
     </audio>
@@ -855,11 +833,13 @@
                 }
                 
                 if (navigator.vibrate) {
-                    navigator.vibrate(50);
+                    navigator.vibrate(30);
                 }
                 
                 this.currentGrid[row][col] = !this.currentGrid[row][col];
                 const cell = document.getElementById(`cell-${row}-${col}`);
+                
+                cell.classList.remove('error');
                 
                 if (this.currentGrid[row][col]) {
                     cell.classList.add('shaded');
@@ -872,7 +852,7 @@
                 if (this.hintsUsed >= this.maxHints || this.isPaused) return;
                 
                 if (navigator.vibrate) {
-                    navigator.vibrate([100, 50, 100]);
+                    navigator.vibrate([50, 30, 50, 30, 50]);
                 }
                 
                 this.hintsUsed++;
@@ -906,8 +886,10 @@
                 if (this.isPaused) return;
                 
                 if (navigator.vibrate) {
-                    navigator.vibrate([50, 100, 50]);
+                    navigator.vibrate([100, 50, 100]);
                 }
+                
+                this.clearErrorHighlights();
                 
                 let shadedCount = 0;
                 let totalSolutionCells = 0;
@@ -923,81 +905,95 @@
                     }
                 }
                 
-                const errors = this.checkSolution();
+                const wrongCells = this.findWrongCells();
+                const hasErrors = wrongCells.length > 0;
                 
                 if (shadedCount === 0) {
-                    this.showFeedback([], "🤔 You haven't shaded a single cell yet!", "Start by identifying duplicate numbers in rows and columns.");
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200]);
+                    }
+                    this.showFeedback("🤔 You haven't filled a single cell yet!", "Start by clicking cells to shade them and eliminate duplicate numbers.");
                 }
-                else if (shadedCount < totalSolutionCells && errors.length === 0) {
-                    this.showFeedback([], "👍 Getting better, keep going!", `You have ${shadedCount}/${totalSolutionCells} correct cells shaded. Continue finding the remaining duplicates!`);
+                else if (shadedCount < totalSolutionCells && !hasErrors) {
+                    if (navigator.vibrate) {
+                        navigator.vibrate([50, 50, 50]);
+                    }
+                    this.showFeedback("👍 Getting better, keep going!", `You have ${shadedCount}/${totalSolutionCells} correct cells shaded. Continue finding the remaining duplicates!`);
                 }
-                else if (shadedCount < totalSolutionCells && errors.length > 0) {
-                    this.showFeedback(errors, "😬 Oops, you made mistakes!", "Check the errors below and try again.");
+                else if (shadedCount < totalSolutionCells && hasErrors) {
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200, 100, 200]);
+                    }
+                    this.highlightWrongCells(wrongCells);
+                    this.showFeedback("😬 Oops, you made mistakes!", `You have ${wrongCells.length} incorrect cell(s). They are highlighted in red. Fix them and try again!`);
                 }
-                else if (shadedCount === totalSolutionCells && errors.length === 0) {
-                    this.showFeedback([], "🎉 Congratulations, you did it! 🏆", `Perfect solution! You completed it in ${this.formatTime(this.elapsedTime)}.`);
+                else if (shadedCount === totalSolutionCells && !hasErrors) {
+                    const victorySound = document.getElementById('victorySound');
+                    victorySound.play().catch(e => console.log('Sound not available'));
+                    
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200, 100, 400]);
+                    }
+                    this.showFeedback("🎉 Congratulations, you did it! 🏆", `Perfect solution! You completed it in ${this.formatTime(this.elapsedTime)}.`);
                     this.handleVictory();
                 }
-                else if (errors.length > 0) {
-                    this.showFeedback(errors, "😬 Oops, you made mistakes!", "You've shaded cells, but some are incorrect. Check the errors below.");
+                else if (hasErrors) {
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200, 100, 200, 100, 200]);
+                    }
+                    this.highlightWrongCells(wrongCells);
+                    this.showFeedback("😬 Oops, you made mistakes!", `You have ${wrongCells.length} incorrect cell(s). They are highlighted in red. Fix them and try again!`);
                 }
             }
 
-            checkSolution() {
-                const errors = [];
+            findWrongCells() {
+                const wrongCells = [];
                 
                 for (let row = 0; row < this.gridSize; row++) {
                     for (let col = 0; col < this.gridSize; col++) {
                         if (this.solution[row][col] && !this.currentGrid[row][col]) {
-                            errors.push(`Cell at row ${row + 1}, column ${col + 1} should be shaded`);
-                        } else if (!this.solution[row][col] && this.currentGrid[row][col]) {
-                            errors.push(`Cell at row ${row + 1}, column ${col + 1} should NOT be shaded`);
+                            wrongCells.push([row, col, 'missing']);
+                        }
+                        else if (!this.solution[row][col] && this.currentGrid[row][col]) {
+                            wrongCells.push([row, col, 'extra']);
                         }
                     }
                 }
                 
-                const adjacentErrors = new Set();
-                for (let row = 0; row < this.gridSize; row++) {
-                    for (let col = 0; col < this.gridSize; col++) {
-                        if (this.currentGrid[row][col]) {
-                            const adjacent = [
-                                [row - 1, col], [row + 1, col],
-                                [row, col - 1], [row, col + 1]
-                            ];
-                            
-                            for (const [adjRow, adjCol] of adjacent) {
-                                if (adjRow >= 0 && adjRow < this.gridSize && 
-                                    adjCol >= 0 && adjCol < this.gridSize && 
-                                    this.currentGrid[adjRow][adjCol]) {
-                                    const errorKey = `${Math.min(row, adjRow)},${Math.min(col, adjCol)}-${Math.max(row, adjRow)},${Math.max(col, adjCol)}`;
-                                    if (!adjacentErrors.has(errorKey)) {
-                                        adjacentErrors.add(errorKey);
-                                        errors.push(`Adjacent shaded cells at (${row + 1}, ${col + 1}) and (${adjRow + 1}, ${adjCol + 1})`);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                return errors;
+                return wrongCells;
             }
 
-            showFeedback(errors, title, message) {
+            highlightWrongCells(wrongCells) {
+                wrongCells.forEach(([row, col]) => {
+                    const cell = document.getElementById(`cell-${row}-${col}`);
+                    if (cell) {
+                        cell.classList.add('error');
+                    }
+                });
+                
+                setTimeout(() => {
+                    this.clearErrorHighlights();
+                }, 3000);
+            }
+
+            clearErrorHighlights() {
+                for (let row = 0; row < this.gridSize; row++) {
+                    for (let col = 0; col < this.gridSize; col++) {
+                        const cell = document.getElementById(`cell-${row}-${col}`);
+                        if (cell) {
+                            cell.classList.remove('error');
+                        }
+                    }
+                }
+            }
+
+            showFeedback(title, message) {
                 const modal = document.getElementById('feedbackModal');
                 const titleElement = document.getElementById('feedbackTitle');
                 const messageElement = document.getElementById('feedbackMessage');
-                const errorsList = document.getElementById('errorsList');
                 
                 titleElement.textContent = title;
                 messageElement.textContent = message;
-                
-                if (errors.length > 0) {
-                    errorsList.style.display = 'block';
-                    errorsList.innerHTML = errors.map(error => `<div class="error-item">• ${error}</div>`).join('');
-                } else {
-                    errorsList.style.display = 'none';
-                }
                 
                 modal.style.display = 'flex';
             }
@@ -1008,14 +1004,6 @@
 
             handleVictory() {
                 this.stopTimer();
-                
-                const victorySound = document.getElementById('victorySound');
-                victorySound.play().catch(e => console.log('Sound not available'));
-                
-                if (navigator.vibrate) {
-                    navigator.vibrate([200, 100, 200, 100, 200]);
-                }
-                
                 this.updateStatistics();
                 
                 document.getElementById('gameScreen').style.display = 'none';
@@ -1055,7 +1043,7 @@
 
             togglePause() {
                 if (navigator.vibrate) {
-                    navigator.vibrate(100);
+                    navigator.vibrate([80, 40, 80]);
                 }
                 
                 this.isPaused = !this.isPaused;
@@ -1084,7 +1072,7 @@
 
             restart() {
                 if (navigator.vibrate) {
-                    navigator.vibrate([100, 50, 100]);
+                    navigator.vibrate([100, 50, 100, 50, 100]);
                 }
                 
                 this.stopTimer();
@@ -1104,6 +1092,7 @@
                 this.grid = JSON.parse(JSON.stringify(this.originalGrid));
                 this.currentGrid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
                 
+                this.clearErrorHighlights();
                 this.renderGrid();
             }
 
@@ -1264,3 +1253,8 @@
     </script>
 </body>
 </html>
+                
+                if (firstInRow !== col) {
+                    for (let c = 0; c < this.gridSize; c++) {
+                        if (c !== col && this.grid[row][c] === currentNum) {
+                            shouldShade = true;
