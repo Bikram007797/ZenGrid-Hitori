@@ -147,19 +147,96 @@
             padding: 1rem;
         }
 
-        .entry-image {
-            width: 100%;
-            max-width: 450px;
-            height: auto;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(139, 111, 71, 0.4);
-            margin-bottom: 2rem;
-            animation: imageFloat 3s ease-in-out infinite;
+        .japanese-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 3rem;
+            animation: titleFloat 3s ease-in-out infinite;
         }
 
-        @keyframes imageFloat {
+        @keyframes titleFloat {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
+        }
+
+        .main-title {
+            font-family: "Cinzel Decorative", "Papyrus", serif;
+            font-size: 4.5rem;
+            color: #8B6F47;
+            text-shadow: 3px 3px 6px rgba(139, 111, 71, 0.4),
+                         -1px -1px 0 rgba(255, 255, 255, 0.7),
+                         1px 1px 2px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.25em;
+            font-weight: 700;
+            transform: scale(1, 1.2);
+            -webkit-text-stroke: 1px rgba(139, 111, 71, 0.3);
+        }
+
+        .sub-title {
+            font-family: "Cinzel", serif;
+            font-size: 2.8rem;
+            color: #A0845C;
+            margin-bottom: 1rem;
+            letter-spacing: 0.4em;
+            font-weight: 400;
+            transform: scale(1, 1.1);
+            text-shadow: 2px 2px 4px rgba(139, 111, 71, 0.3);
+        }
+
+        .title-line {
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent,
+                #8B6F47,
+                #A0845C,
+                #8B6F47,
+                transparent
+            );
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .title-line::before,
+        .title-line::after {
+            content: '✦';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8B6F47;
+            font-size: 1rem;
+        }
+
+        .title-line::before {
+            left: -20px;
+        }
+
+        .title-line::after {
+            right: -20px;
+        }
+
+        .developer-name {
+            font-family: "Cinzel", serif;
+            font-size: 1.3rem;
+            color: #8B6F47;
+            letter-spacing: 0.3em;
+            opacity: 0.9;
+            margin-top: 1rem;
+            font-weight: 400;
+            text-shadow: 1px 1px 2px rgba(139, 111, 71, 0.2);
+        }
+
+        .zen-btn {
+            font-family: "Yu Mincho", "MS Mincho", serif;
+            letter-spacing: 0.2em;
+            transform: scale(1, 1.05);
+            transition: all 0.3s ease;
+        }
+
+        .zen-btn:hover {
+            transform: translateY(-2px) scale(1, 1.05);
         }
 
         .page-transition {
@@ -527,8 +604,13 @@
             </div>
 
             <div class="title-screen" id="titleScreen">
-                <img src="https://i.postimg.cc/T3BvDBkM/image.png" alt="ZenGrid Hitori" class="entry-image">
-                <button class="menu-btn" onclick="showMenuWithTransition()">🎋 Enter Game</button>
+                <div class="japanese-title">
+                    <div class="main-title">ZENGRID</div>
+                    <div class="sub-title">HITORI</div>
+                    <div class="title-line"></div>
+                    <div class="developer-name">BY BIKRAM</div>
+                </div>
+                <button class="menu-btn zen-btn" onclick="showMenuWithTransition()">🎋 ENTER</button>
             </div>
 
             <div class="menu" id="mainMenu">
