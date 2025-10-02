@@ -9,18 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Bikram007797/zengrid-hitori.git"
-  },"zengrid-hitori",
-  "version": "1.0.0",
-  "description": "A beautiful, mobile-friendly Hitori puzzle game with a zen theme",
-  "main": "index.html",
-  "scripts": {
-    "start": "live-server",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/YOUR_ACTUAL_USERNAME/zengrid-hitori.git"
+    "url": "git+https://github.com/Bikram007797/ZenGrid-Hitori.git"
   },
   "keywords": [
     "hitori",
@@ -28,6 +17,10 @@
     "game",
     "javascript"
   ],
-  "author": "Bikram",
-  "license": "MIT"
+  "author": "Bikram007797",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bikram007797/ZenGrid-Hitori/issues"
+  },
+  "homepage": "https://Bikram007797.github.io/ZenGrid-Hitori"
 }
